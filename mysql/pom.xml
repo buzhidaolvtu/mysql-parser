@@ -22,6 +22,7 @@
 						<include>MySqlLexer.g4</include>
 						<include>MySqlParser.g4</include>
 					</includes>
+					<outputDirectory>${project.build.directory}/generated-sources/antlr4/com/antlr/grammarsv4/mysql</outputDirectory>
 					<visitor>true</visitor>
 					<listener>true</listener>
 				</configuration>
@@ -42,7 +43,7 @@
 					<showTree>true</showTree>
 					<entryPoint>root</entryPoint>
 					<grammarName>MySql</grammarName>
-					<packageName></packageName>
+					<packageName>com.antlr.grammarsv4.mysql</packageName>
 					<caseInsensitiveType>UPPER</caseInsensitiveType>
 					<exampleFiles>examples/</exampleFiles>
                     <!--<exampleFiles>survey/</exampleFiles>-->
@@ -50,7 +51,7 @@
 				<executions>
 					<execution>
 						<goals>
-							<!--<goal>test</goal>-->
+							<goal>test</goal>
 						</goals>
 					</execution>
 				</executions>

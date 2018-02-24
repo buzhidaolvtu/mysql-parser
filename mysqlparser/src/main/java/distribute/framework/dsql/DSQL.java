@@ -12,8 +12,7 @@ public class DSQL {
     public static void main(String[] args) {
         try {
             String file = "/Users/boxfish/workspace/dsql/examples/dml_select.sql";
-            String file2 = "sql-scripts/select.sql";
-            AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file2, "UTF-8", CaseInsensitiveType.UPPER);
+            AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file, "UTF-8", CaseInsensitiveType.UPPER);
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
             MySqlLexer lexer = new MySqlLexer(charStream);
