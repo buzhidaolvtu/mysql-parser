@@ -12,7 +12,7 @@ public class SimpleExpression {
     private final static Logger logger = LoggerFactory.getLogger(SimpleExpression.class);
 
     public Value evaluate(MySqlParser.Boolean_primaryContext e1){
-        logger.info("SimpleExpression evaluate");
+        logger.info("SimpleExpression evaluate,e1:{}",e1.getText());
 
         if(e1 == null){
             return new Value(DataType.Bool,DataType.FALSE);

@@ -11,7 +11,7 @@ public class OrExpression {
     private final static Logger logger = LoggerFactory.getLogger(OrExpression.class);
 
     public Value evaluate(MySqlParser.ExpressionContext e1, MySqlParser.ExpressionContext e2){
-        logger.info("OrExpression evaluate");
+        logger.info("OrExpression evaluate,e1:{},e2:{}",e1.getText(),e2.getText());
 
         if(e1 == null || e2 == null){
             return new Value(DataType.Bool,DataType.FALSE);
