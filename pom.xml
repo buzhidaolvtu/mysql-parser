@@ -15,8 +15,8 @@
             </activation>
             <id>grammarv4</id>
             <modules>
-                <module>mysql</module>
-                <module>mysqlparser</module>
+                <module>mysql-grammar</module>
+                <module>parser</module>
             </modules>
         </profile>
     </profiles>

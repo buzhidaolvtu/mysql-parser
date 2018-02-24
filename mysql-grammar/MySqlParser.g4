@@ -29,6 +29,8 @@ options { tokenVocab=MySqlLexer; }
 
 @header{
     package com.antlr.grammarsv4.mysql;
+    import distribute.framework.parser.Value;
+    import distribute.framework.parser.expression.*;
 }
 
 // Top Level Description
@@ -2061,16 +2063,16 @@ function_arg
 
 
 //MYSQL EXPRESSION START
-expression:
-    expression OR expression
-  | expression '|' '|' expression
-  | expression XOR expression
-  | expression AND expression
-  | expression '&' '&' expression
-  | NOT expression
-  | '!' expression
-  | boolean_primary IS NOT? (TRUE | FALSE | UNKNOWN)
-  | boolean_primary
+expression locals [Value value]:
+    e1=expression OR e2=expression            {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e2);}     #OrExpression
+  | e1=expression '|' '|' e2=expression       {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e1);}     #OrExpression
+  | e1=expression XOR e2=expression           {XorExpression xorExpr = new XorExpression(); $value = xorExpr.evaluate(((XorExpressionContext)_localctx).e1,((XorExpressionContext)_localctx).e2);}      #XorExpression
+  | e1=expression AND e2=expression           {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
+  | e1=expression '&' '&' e2=expression       {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
+  | NOT e1=expression                         {NotExpression notExpr = new NotExpression(); $value = notExpr.evaluate( ((NotExpressionContext)_localctx).e1 );}         #NotExpression
+  | '!' e1=expression                         {NotExpression notExpr = new NotExpression(); $value = notExpr.evaluate(((NotExpressionContext)_localctx).e1);}           #NotExpression
+  | e1=boolean_primary IS NOT? (TRUE | FALSE | UNKNOWN)   {IsExpression isExpr = new IsExpression(); $value = isExpr.evaluate(((IsExpressionContext)_localctx).e1);}     #IsExpression
+  | e1=boolean_primary                           {SimpleExpression simpleExpr = new SimpleExpression(); $value = simpleExpr.evaluate(((SimpleExpressionContext)_localctx).e1);} #SimpleExpression
   ;
 
 boolean_primary:
