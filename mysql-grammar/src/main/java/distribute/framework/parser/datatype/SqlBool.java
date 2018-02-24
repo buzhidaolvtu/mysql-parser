@@ -1,15 +1,15 @@
 package distribute.framework.parser.datatype;
 
-public class SqlString extends DataTypeImpl{
+
+public class SqlBool extends DataTypeImpl{
 
     @Override
-    public boolean isString() {
+    public boolean isBool() {
         return true;
     }
 
     @Override
-    public SqlString string() {
+    public SqlBool bool() {
         return this;
     }
-
 }

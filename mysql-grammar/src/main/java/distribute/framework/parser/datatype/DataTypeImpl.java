@@ -21,4 +21,14 @@ public class DataTypeImpl implements DataType{
     public SqlNumber number() {
         return null;
     }
+
+    @Override
+    public boolean isBool() {
+        return false;
+    }
+
+    @Override
+    public SqlBool bool() {
+        return null;
+    }
 }

@@ -2065,7 +2065,7 @@ function_arg
 //MYSQL EXPRESSION START
 expression locals [Value value]:
     e1=expression OR e2=expression            {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e2);}     #OrExpression
-  | e1=expression '|' '|' e2=expression       {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e1);}     #OrExpression
+  | e1=expression '|' '|' e2=expression       {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e2);}     #OrExpression
   | e1=expression XOR e2=expression           {XorExpression xorExpr = new XorExpression(); $value = xorExpr.evaluate(((XorExpressionContext)_localctx).e1,((XorExpressionContext)_localctx).e2);}      #XorExpression
   | e1=expression AND e2=expression           {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
   | e1=expression '&' '&' e2=expression       {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression

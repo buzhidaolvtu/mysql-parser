@@ -20,7 +20,8 @@ public class DSQL {
             MySqlParser parser = new MySqlParser(tokenStream);
             MyListener listener = new MyListener();
             parser.addParseListener(listener);
-            parser.expression();
+            MySqlParser.ExpressionContext expression = parser.expression();
+            System.out.println(expression.value);
         } catch (Exception e) {
             e.printStackTrace();
         }
