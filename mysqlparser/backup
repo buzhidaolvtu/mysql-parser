@@ -1,0 +1,203 @@
+   @Override
+    public void visitTerminal(TerminalNode node) {
+        super.visitTerminal(node);
+    }
+
+
+
+    @Override
+    public void enterSimpleSelect(MySqlParser.SimpleSelectContext ctx) {
+        super.enterSimpleSelect(ctx);
+    }
+
+    @Override
+    public void exitSimpleSelect(MySqlParser.SimpleSelectContext ctx) {
+        super.exitSimpleSelect(ctx);
+        MySqlParser.Query_specificationContext query_specificationContext = ctx.query_specification();
+    }
+
+    @Override
+    public void enterQuery_specification(MySqlParser.Query_specificationContext query_specificationContext) {
+        super.enterQuery_specification(query_specificationContext);
+    }
+
+    @Override
+    public void exitQuery_specification(MySqlParser.Query_specificationContext query_specificationContext) {
+        super.exitQuery_specification(query_specificationContext);
+
+        /**
+         * select items
+         */
+        query_specificationContext.SELECT();
+        List<MySqlParser.Select_specContext> select_specContexts = query_specificationContext.select_spec();
+        MySqlParser.Select_listContext select_listContext = query_specificationContext.select_list();
+        List<MySqlParser.Select_list_elemContext> select_list_elemContexts = select_listContext.select_list_elem();
+        //        select_list_elemContexts.get(0).
+
+        /**
+         * from tables
+         */
+        MySqlParser.From_clauseContext from_clauseContext = query_specificationContext.from_clause();
+        MySqlParser.Table_sourcesContext table_sourcesContext = from_clauseContext.table_sources();
+
+        /**
+         * where condition
+         */
+        MySqlParser.ExpressionContext where_expression = null;
+        MySqlParser.ExpressionContext having_expression = null;
+        if (from_clauseContext.WHERE() != null) {
+            where_expression = from_clauseContext.expression(0);
+            if (from_clauseContext.HAVING() != null) {
+                having_expression = from_clauseContext.expression(1);
+            }
+        } else if (from_clauseContext.HAVING() != null) {
+            having_expression = from_clauseContext.expression(0);
+        }
+
+        if (where_expression != null) {
+            int ruleIndex = where_expression.getRuleIndex();
+            switch (ruleIndex) {
+                case 1:
+                    //notExpression
+                case 2:
+                    //logicalExpression
+                case 3:
+                    //isExpression TODO
+                case 4:
+                    //predicateExpression
+                    MySqlParser.PredicateExpressionContext predicateExpressionContext = (MySqlParser.PredicateExpressionContext) where_expression.getRuleContext();
+                    MySqlParser.PredicateContext predicateContext = predicateExpressionContext.predicate();
+
+            }
+        }
+
+
+        MySqlParser.Order_by_clauseContext order_by_clauseContext = query_specificationContext.order_by_clause();
+        MySqlParser.Limit_clauseContext limit_clauseContext = query_specificationContext.limit_clause();
+
+    }
+
+    private void decomposePredicate(MySqlParser.PredicateContext predicateContext) {
+        int ruleIndex = predicateContext.getRuleIndex();
+        RuleContext ruleContext = predicateContext.getRuleContext();
+        switch (ruleIndex) {
+            case 1:
+                //inPredicate todo
+                MySqlParser.InPredicateContext inPredicateContext = (MySqlParser.InPredicateContext)ruleContext;
+
+            case 2:
+                //isNullPredicate todo
+            case 3:
+                //binaryComparasionPredicate
+                MySqlParser.BinaryComparasionPredicateContext binaryComparasionPredicate = (MySqlParser.BinaryComparasionPredicateContext) ruleContext;
+                List<MySqlParser.PredicateContext> predicates = binaryComparasionPredicate.predicate();
+                MySqlParser.Comparison_operatorContext comparison_operatorContext = binaryComparasionPredicate.comparison_operator();
+                int op_index = comparison_operatorContext.getRuleIndex();
+                comparisonOperator(op_index, predicates.get(0), predicates.get(1));
+            case 4:
+                //subqueryComparasionPredicate todo
+            case 5:
+                //betweenPredicate todo
+                MySqlParser.BetweenPredicateContext betweenPredicateContext = (MySqlParser.BetweenPredicateContext)ruleContext;
+                List<MySqlParser.PredicateContext> betweenPredicates = betweenPredicateContext.predicate();
+                betweenOperator(betweenPredicates.get(0), betweenPredicates.get(1), betweenPredicates.get(2));
+            case 6:
+                //soundsLikePredicate todo
+            case 7:
+                //likePredicate todo
+            case 8:
+                //regexpPredicate todo
+            case 9:
+                //expressionAtomPredicate
+                MySqlParser.ExpressionAtomPredicateContext expressionAtomPredicate = (MySqlParser.ExpressionAtomPredicateContext) ruleContext;
+            default:
+                throw new RuntimeException("error");
+        }
+    }
+
+    private void comparisonOperator(int op_index, MySqlParser.PredicateContext p1, MySqlParser.PredicateContext p2) {
+        switch (op_index) {
+            case 1://'='
+            case 2://'>'
+            case 3://'<'
+            case 4://'<' '='
+            case 5://'>' '='
+            case 6://'<' '>'
+            case 7://'!' '='
+            case 8://'<' '=' '>'
+            default:
+        }
+    }
+
+    private void betweenOperator(MySqlParser.PredicateContext p, MySqlParser.PredicateContext p1, MySqlParser.PredicateContext p2){
+
+    }
+
+    @Override
+    public void enterSelect_list(MySqlParser.Select_listContext select_listContext) {
+        super.enterSelect_list(select_listContext);
+    }
+
+    @Override
+    public void exitSelect_list(MySqlParser.Select_listContext select_listContext) {
+        super.exitSelect_list(select_listContext);
+//        String text = select_listContext.getText();
+//        System.out.println(text);
+
+    }
+
+    @Override
+    public void enterEveryRule(ParserRuleContext ctx) {
+        super.enterEveryRule(ctx);
+    }
+
+    @Override
+    public void exitEveryRule(ParserRuleContext ctx) {
+        super.exitEveryRule(ctx);
+        RuleContext ruleContext = ctx.getRuleContext();
+        String text = ruleContext.getText();
+        System.out.println(text);
+    }
+
+    //from and where and group and having
+    @Override
+    public void enterFrom_clause(MySqlParser.From_clauseContext from_clauseContext) {
+        super.enterFrom_clause(from_clauseContext);
+    }
+
+    @Override
+    public void exitFrom_clause(MySqlParser.From_clauseContext from_clauseContext) {
+        super.exitFrom_clause(from_clauseContext);
+    }
+
+    @Override
+    public void enterTableSourcesItem(MySqlParser.TableSourcesItemContext tableSourcesItemContext) {
+        super.enterTableSourcesItem(tableSourcesItemContext);
+    }
+
+    @Override
+    public void exitTableSourcesItem(MySqlParser.TableSourcesItemContext tableSourcesItemContext) {
+        super.exitTableSourcesItem(tableSourcesItemContext);
+    }
+
+    //order by
+    @Override
+    public void enterOrder_by_clause(MySqlParser.Order_by_clauseContext order_by_clauseContext) {
+        super.enterOrder_by_clause(order_by_clauseContext);
+    }
+
+    @Override
+    public void exitOrder_by_clause(MySqlParser.Order_by_clauseContext order_by_clauseContext) {
+        super.exitOrder_by_clause(order_by_clauseContext);
+    }
+
+    //limit
+    @Override
+    public void enterLimit_clause(MySqlParser.Limit_clauseContext limit_clauseContext) {
+        super.enterLimit_clause(limit_clauseContext);
+    }
+
+    @Override
+    public void exitLimit_clause(MySqlParser.Limit_clauseContext limit_clauseContext) {
+        super.exitLimit_clause(limit_clauseContext);
+    }
