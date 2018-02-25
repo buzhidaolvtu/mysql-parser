@@ -37,4 +37,4 @@
 						FUT_RENEW.LAST_VISIT <  FT_RENEW.LAST_POST_DATE
 					)
 				)
-			)
+		)

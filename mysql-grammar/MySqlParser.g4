@@ -2068,74 +2068,74 @@ expression locals [Value value]:
   | e1=expression '|' '|' e2=expression       {OrExpression orExpr = new OrExpression(); $value = orExpr.evaluate(((OrExpressionContext)_localctx).e1,((OrExpressionContext)_localctx).e2);}     #OrExpression
   | e1=expression XOR e2=expression           {XorExpression xorExpr = new XorExpression(); $value = xorExpr.evaluate(((XorExpressionContext)_localctx).e1,((XorExpressionContext)_localctx).e2);}      #XorExpression
   | e1=expression AND e2=expression           {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
-  | e1=expression '&' '&' e2=expression       {AndExpression andExpr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
+  | e1=expression '&' '&' e2=expression       {AndExpression andEx pr = new AndExpression(); $value = andExpr.evaluate(((AndExpressionContext)_localctx).e1,((AndExpressionContext)_localctx).e2);}      #AndExpression
   | NOT e1=expression                         {NotExpression notExpr = new NotExpression(); $value = notExpr.evaluate( ((NotExpressionContext)_localctx).e1 );}         #NotExpression
   | '!' e1=expression                         {NotExpression notExpr = new NotExpression(); $value = notExpr.evaluate(((NotExpressionContext)_localctx).e1);}           #NotExpression
   | e1=boolean_primary IS NOT? (TRUE | FALSE | UNKNOWN)   {IsExpression isExpr = new IsExpression(); $value = isExpr.evaluate(((IsExpressionContext)_localctx).e1);}     #IsExpression
   | e1=boolean_primary                           {SimpleExpression simpleExpr = new SimpleExpression(); $value = simpleExpr.evaluate(((SimpleExpressionContext)_localctx).e1);} #SimpleExpression
   ;
 
-boolean_primary:
-    boolean_primary IS null_notnull
+boolean_primary locals [Value value]:
+    e1=boolean_primary IS null_notnull                            {IsNullBooleanPrimaryExpression isNullBpExpr = new IsNullBooleanPrimaryExpression();$value=isNullBpExpr.evaluate(((IsNullBooleanPrimaryContext)_localctx).e1);} #IsNullBooleanPrimary
 //      boolean_primary IS NOT? NULL_LITERAL //TODO
-  | boolean_primary '<' '=' '>' predicate
-  | boolean_primary comparison_operator predicate
-  | boolean_primary comparison_operator (ALL | ANY) '(' subquery ')'
-  | predicate
+  | boolean_primary '<' '=' '>' predicate                         #ConsistentEqualBooleanPrimary
+  | boolean_primary comparison_operator predicate                 #ComparisonBooleanPrimary
+  | boolean_primary comparison_operator (ALL | ANY) '(' subquery ')' #ComparisonBooleanPrimary2
+  | predicate                                                        #PredicateBooleanPrimary
   ;
 
 comparison_operator: '=' | '>' '=' | '>' | '<' '=' | '<' | '<' '>' | '!' '=';
 
-predicate:
-    bit_expr NOT? IN '(' subquery ')'
-  | bit_expr NOT? IN '(' expression_list ')'
-  | bit_expr NOT? BETWEEN bit_expr AND predicate
-  | bit_expr SOUNDS LIKE bit_expr
-  | bit_expr NOT? LIKE simple_expr (ESCAPE simple_expr)?
-  | bit_expr NOT? REGEXP bit_expr
-  | bit_expr
+predicate locals [Value value]:
+    bit_expr NOT? IN '(' subquery ')'                        #InSubqueryPredicate
+  | bit_expr NOT? IN '(' expression_list ')'                 #InPredicate
+  | bit_expr NOT? BETWEEN bit_expr AND predicate             #BetweenPredicate
+  | bit_expr SOUNDS LIKE bit_expr                            #soundsLikePredicate
+  | bit_expr NOT? LIKE simple_expr (ESCAPE simple_expr)?     #likePredicate
+  | bit_expr NOT? REGEXP bit_expr                            #regexpPredicate
+  | bit_expr                                                 #simplePredicate
   ;
 
-bit_expr:
-    bit_expr '|' bit_expr
-  | bit_expr '&' bit_expr
-  | bit_expr '<' '<' bit_expr
-  | bit_expr '>' '>' bit_expr
-  | bit_expr '+' bit_expr
-  | bit_expr '-' bit_expr
-  | bit_expr '*' bit_expr
-  | bit_expr '/' bit_expr
-  | bit_expr DIV bit_expr
-  | bit_expr MOD bit_expr
-  | bit_expr '%' bit_expr
-  | bit_expr '^' bit_expr
+bit_expr locals [Value value]:
+    bit_expr '|' bit_expr                                    #orBitExpr
+  | bit_expr '&' bit_expr                                    #andBitExpr
+  | bit_expr '<' '<' bit_expr                                #shiftLeftBitExpr
+  | bit_expr '>' '>' bit_expr                                #shiftRightBitExpr
+  | bit_expr '+' bit_expr                                    #plusBitExpr
+  | bit_expr '-' bit_expr                                    #minusBitExpr
+  | bit_expr '*' bit_expr                                    #multiplyBitExpr
+  | bit_expr '/' bit_expr                                    #divideBitExpr
+  | bit_expr '%' bit_expr                                    #modBitExpr
+  | bit_expr DIV bit_expr                                    #divideBitExpr
+  | bit_expr MOD bit_expr                                    #modBitExpr
+  | bit_expr '^' bit_expr                                    #xorBitExpr
 //  | bit_expr '+' interval_expr
 //  | bit_expr '-' interval_expr
-  | simple_expr
+  | simple_expr                                              #simpleBitExpr
   ;
 
-simple_expr:
-    DEFAULT
-  | constant
-  | full_column_name
-  | function_call
-  | simple_expr COLLATE collation_name
+simple_expr locals [Value value]:
+    DEFAULT #defaultSimpleExpr
+  | e1=constant                             {ConstantExpression constantExpr = new ConstantExpression(); $value = constantExpr.evaluate(((ConstantSimpleExprContext)_localctx).e1);}  #constantSimpleExpr
+  | e1=full_column_name                     {ColumnExpression columnExpr = new ColumnExpression(); $value = columnExpr.evaluate(((ColumnSimpleExprContext)_localctx).e1);}      #columnSimpleExpr
+  | e1=function_call                           {FunctionExpression functionExpr = new FunctionExpression();$value = functionExpr.evaluate(((FunctionSimpleExprContext)_localctx).e1);} #functionSimpleExpr
+  | simple_expr COLLATE collation_name      {System.out.println("simple_expr COLLATE collation_name");} #collateSimpleExpr
 //  | param_marker
-  | mysql_variable
-  | simple_expr '|' '|' simple_expr
-  | '+' simple_expr
-  | '-' simple_expr
-  | '~' simple_expr
-  | '!' simple_expr
-  | BINARY simple_expr
-  | '(' expression_list ')'
-  | ROW '(' expression ',' expression_list ')'
-  | '(' subquery ')'
-  | EXISTS '(' subquery ')'
+  | mysql_variable                          {System.out.println("mysql_variable");} #variableSimpleExpr
+  | e1=simple_expr '|' '|' e2=simple_expr         {ConcatExpression concatExpr = new ConcatExpression();$value = concatExpr.evaluate(((ConcatSimpleExprContext)_localctx).e1,((ConcatSimpleExprContext)_localctx).e2);} #concatSimpleExpr
+  | '+' e1=simple_expr {PositiveExpression positiveExpr = new PositiveExpression(); $value = positiveExpr.evaluate(((PositiveSimpleExprContext)_localctx).e1);} #positiveSimpleExpr
+  | '-' e1=simple_expr {NegtiveExpression negtiveExpr = new NegtiveExpression(); $value = negtiveExpr.evaluate(((NegtiveSimpleExprContext)_localctx).e1);} #negtiveSimpleExpr
+  | '~' e1=simple_expr #bitInvertSimpleExpr
+  | '!' e1=simple_expr #hignNotSimpleExpr
+  | BINARY e1=simple_expr #binarySimpleExpr
+  | '(' e=expression_list ')' #exprListSimpleExpr
+  | ROW '(' e1=expression ',' e=expression_list ')' #rowSimpleExpr
+  | '(' e1=subquery ')' #subquerySimpleExpr
+  | EXISTS '(' e1=subquery ')' #existsSimpleExpr
 //  | '{' identifier expression '}'
 //  | match_expr
 //  | case_expr
-    | interval_expr
+    | e1=interval_expr #intervalSimpleExpr
    ;
 
 

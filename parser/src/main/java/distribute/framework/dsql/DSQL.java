@@ -11,7 +11,7 @@ public class DSQL {
 
     public static void main(String[] args) {
         try {
-            String file = "/Users/boxfish/IdeaProjects/mysql-parser/parser/examples/expression.sql";
+            String file = "/Users/lvtu/workspace/mysql-parser/parser/examples/expression.sql";
             AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file, "UTF-8", CaseInsensitiveType.UPPER);
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
