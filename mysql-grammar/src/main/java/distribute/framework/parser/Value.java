@@ -19,6 +19,27 @@ public class Value {
         this.value = value;
     }
 
+    public Value isTrue(){
+        return this;//TODO
+    }
+
+    public Value isFalse(){
+        return this;//TODO
+    }
+
+    public Value isUnknown(){
+        return this;//TODO
+    }
+
+    public Value isNull(){
+        return this;//todo
+    }
+
+    public Value isNotNull(){
+        return this;//todo
+    }
+
+
     @Override
     public String toString() {
         return "Value{" +

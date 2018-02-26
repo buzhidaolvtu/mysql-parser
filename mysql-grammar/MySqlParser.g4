@@ -1854,7 +1854,7 @@ null_notnull
    | (NULL_LITERAL | NULL_SPEC_LITERAL)
    ;
 
-constant locals [int pn=0;]
+constant locals [int pn=0;public Value value=null;]
     : string_literal {$pn=1;} | decimal_literal {$pn=2;}
    | hexadecimal_literal {$pn=3;} | boolean_literal {$pn=4;}
    | REAL_LITERAL {$pn=5;} | BIT_STRING {$pn=6;} | NOTNULL {$pn=7;}
@@ -2078,40 +2078,40 @@ expression locals [Value value]:
 boolean_primary locals [Value value]:
     e1=boolean_primary IS null_notnull                            #IsNullBooleanPrimary
 //      boolean_primary IS NOT? NULL_LITERAL //TODO 为什么这个规则不好使
-  | boolean_primary '<' '=' '>' predicate                         #ConsistentEqualBooleanPrimary
-  | boolean_primary comparison_operator predicate                 #ComparisonBooleanPrimary
-  | boolean_primary comparison_operator (ALL | ANY) '(' subquery ')' #ComparisonBooleanPrimary2
-  | predicate                                                        #PredicateBooleanPrimary
+  | e1=boolean_primary '<' '=' '>' e2=predicate                         #ConsistentEqualBooleanPrimary
+  | e1=boolean_primary comparison_operator e2=predicate                 #ComparisonBooleanPrimary
+  | e1=boolean_primary comparison_operator (ALL | ANY) '(' e2=subquery ')' #ComparisonBooleanPrimary2
+  | e1=predicate                                                        #PredicateBooleanPrimary
   ;
 
 comparison_operator: '=' | '>' '=' | '>' | '<' '=' | '<' | '<' '>' | '!' '=';
 
 predicate locals [Value value]:
-    bit_expr NOT? IN '(' subquery ')'                        #InSubqueryPredicate
-  | bit_expr NOT? IN '(' expression_list ')'                 #InPredicate
-  | bit_expr NOT? BETWEEN bit_expr AND predicate             #BetweenPredicate
-  | bit_expr SOUNDS LIKE bit_expr                            #soundsLikePredicate
-  | bit_expr NOT? LIKE simple_expr (ESCAPE simple_expr)?     #likePredicate
-  | bit_expr NOT? REGEXP bit_expr                            #regexpPredicate
-  | bit_expr                                                 #simplePredicate
+    e1=bit_expr NOT? IN '(' e2=subquery ')'                        #InSubqueryPredicate
+  | e1=bit_expr NOT? IN '(' e2=expression_list ')'                 #InPredicate
+  | e1=bit_expr NOT? BETWEEN e2=bit_expr AND e3=predicate             #BetweenPredicate
+  | e1=bit_expr SOUNDS LIKE e2=bit_expr                            #soundsLikePredicate
+  | e1=bit_expr NOT? LIKE e2=simple_expr (ESCAPE e3=simple_expr)?     #likePredicate
+  | e1=bit_expr NOT? REGEXP e2=bit_expr                            #regexpPredicate
+  | e1=bit_expr                                                 #simplePredicate
   ;
 
 bit_expr locals [Value value]:
-    bit_expr '|' bit_expr                                    #orBitExpr
-  | bit_expr '&' bit_expr                                    #andBitExpr
-  | bit_expr '<' '<' bit_expr                                #shiftLeftBitExpr
-  | bit_expr '>' '>' bit_expr                                #shiftRightBitExpr
-  | bit_expr '+' bit_expr                                    #plusBitExpr
-  | bit_expr '-' bit_expr                                    #minusBitExpr
-  | bit_expr '*' bit_expr                                    #multiplyBitExpr
-  | bit_expr '/' bit_expr                                    #divideBitExpr
-  | bit_expr '%' bit_expr                                    #modBitExpr
-  | bit_expr DIV bit_expr                                    #divideBitExpr
-  | bit_expr MOD bit_expr                                    #modBitExpr
-  | bit_expr '^' bit_expr                                    #xorBitExpr
+    e1=bit_expr '|' e2=bit_expr                                    #orBitExpr
+  | e1=bit_expr '&' e2=bit_expr                                    #andBitExpr
+  | e1=bit_expr '<' '<' e2=bit_expr                                #shiftLeftBitExpr
+  | e1=bit_expr '>' '>' e2=bit_expr                                #shiftRightBitExpr
+  | e1=bit_expr '+' e2=bit_expr                                    #plusBitExpr
+  | e1=bit_expr '-' e2=bit_expr                                    #minusBitExpr
+  | e1=bit_expr '*' e2=bit_expr                                    #multiplyBitExpr
+  | e1=bit_expr '/' e2=bit_expr                                    #divideBitExpr
+  | e1=bit_expr '%' e2=bit_expr                                    #modBitExpr
+  | e1=bit_expr DIV e2=bit_expr                                    #divideBitExpr
+  | e1=bit_expr MOD e2=bit_expr                                    #modBitExpr
+  | e1=bit_expr '^' e2=bit_expr                                    #xorBitExpr
 //  | bit_expr '+' interval_expr
 //  | bit_expr '-' interval_expr
-  | simple_expr                                              #simpleBitExpr
+  | e1=simple_expr                                              #simpleBitExpr
   ;
 
 simple_expr locals [Value value]:
