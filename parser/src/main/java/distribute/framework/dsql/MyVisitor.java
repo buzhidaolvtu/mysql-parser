@@ -289,7 +289,7 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
     public ParserRuleContext visitColumnSimpleExpr(MySqlParser.ColumnSimpleExprContext ctx) {
         MySqlParser.Full_column_nameContext e1 = ctx.e1;
         e1.accept(this);
-        ctx.value = ;
+        ctx.value = null;//todo
         return ctx;
     }
 
