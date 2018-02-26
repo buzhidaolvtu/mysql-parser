@@ -1,20 +1,17 @@
 package distribute.framework.parser;
 
-import distribute.framework.parser.datatype.DataType;
+import distribute.framework.parser.datatype.Type;
 
 public class Value {
 
-    public final static Value TRUE = new Value(DataType.Bool);
-    public final static Value FALSE = new Value(DataType.Bool);
-
-    private DataType type;
+    private Type type;
     private Object value;
 
-    public Value(DataType type){
+    public Value(Type type){
         this(type,null);
     }
 
-    public Value(DataType type, Object value) {
+    public Value(Type type, Object value) {
         this.type = type;
         this.value = value;
     }

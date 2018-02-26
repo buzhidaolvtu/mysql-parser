@@ -4,12 +4,15 @@ package distribute.framework.dsql;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.parser.Value;
-import distribute.framework.parser.datatype.DataType;
+import distribute.framework.parser.datatype.Type;
 import distribute.framework.parser.operator.OpType;
 import distribute.framework.parser.operator.Operator;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
 
@@ -295,98 +298,137 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
 
     @Override
     public ParserRuleContext visitFunctionSimpleExpr(MySqlParser.FunctionSimpleExprContext ctx) {
-        return super.visitFunctionSimpleExpr(ctx);
+        //todo
+        MySqlParser.Function_callContext e1 = ctx.e1;
+        //parse function
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitCollateSimpleExpr(MySqlParser.CollateSimpleExprContext ctx) {
-        return super.visitCollateSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitVariableSimpleExpr(MySqlParser.VariableSimpleExprContext ctx) {
-        return super.visitVariableSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitConcatSimpleExpr(MySqlParser.ConcatSimpleExprContext ctx) {
-        return super.visitConcatSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitPositiveSimpleExpr(MySqlParser.PositiveSimpleExprContext ctx) {
-        return super.visitPositiveSimpleExpr(ctx);
+        MySqlParser.Simple_exprContext e1 = ctx.e1;
+        e1.accept(this);
+        ctx.value = e1.value;//todo what if e1.value is boolean?
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitNegtiveSimpleExpr(MySqlParser.NegtiveSimpleExprContext ctx) {
-        return super.visitNegtiveSimpleExpr(ctx);
+        MySqlParser.Simple_exprContext e1 = ctx.e1;
+        e1.accept(this);
+        ctx.value = e1.value;//todo what if e1.value is boolean?
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitBitInvertSimpleExpr(MySqlParser.BitInvertSimpleExprContext ctx) {
-        return super.visitBitInvertSimpleExpr(ctx);
+        MySqlParser.Simple_exprContext e1 = ctx.e1;
+        e1.accept(this);
+        ctx.value = Operator.evaluate(OpType.BIT_INVERT, e1.value);
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitHignNotSimpleExpr(MySqlParser.HignNotSimpleExprContext ctx) {
-        return super.visitHignNotSimpleExpr(ctx);
+        MySqlParser.Simple_exprContext e1 = ctx.e1;
+        e1.accept(this);
+        ctx.value = Operator.evaluate(OpType.NOT, e1.value);
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitBinarySimpleExpr(MySqlParser.BinarySimpleExprContext ctx) {
-        return super.visitBinarySimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitExprListSimpleExpr(MySqlParser.ExprListSimpleExprContext ctx) {
-        return super.visitExprListSimpleExpr(ctx);
+        MySqlParser.Expression_listContext e = ctx.e;
+        e.accept(this);
+        List<Value> values = e.expression().stream().map(item -> item.value).collect(Collectors.toList());
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitRowSimpleExpr(MySqlParser.RowSimpleExprContext ctx) {
-        return super.visitRowSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitSubquerySimpleExpr(MySqlParser.SubquerySimpleExprContext ctx) {
-        return super.visitSubquerySimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitExistsSimpleExpr(MySqlParser.ExistsSimpleExprContext ctx) {
-        return super.visitExistsSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitIntervalSimpleExpr(MySqlParser.IntervalSimpleExprContext ctx) {
-        return super.visitIntervalSimpleExpr(ctx);
+        //todo
+        return ctx;
     }
 
     @Override
     public ParserRuleContext visitConstant(MySqlParser.ConstantContext ctx) {
         String text = ctx.getText();
+        logger.info("constant:{}", text);
 
         switch (ctx.pn) {
             case 1://string_literal
                 text = text.replaceAll("'", "");
-                ctx.value = new Value(DataType.String, text);
+                ctx.value = new Value(Type.STRING, text);
                 break;
             case 2://decimal_literal
+                ctx.value = new Value(Type.NUMBER, Integer.parseInt(text));
                 break;
             case 3://hexadecimal_literal
                 text = text.replaceAll("0x", "");
                 text = String.valueOf(Integer.parseInt(text, 16));
                 break;
             case 4://boolean_literal
+                if (text.equals("TRUE")) {
+                    ctx.value = new Value(Type.BOOLEAN, true);
+                } else {
+                    ctx.value = new Value(Type.BOOLEAN, false);
+                }
+                break;
             case 5://REAL_LITERAL
+                ctx.value = new Value(Type.NUMBER, Double.parseDouble(text));
+                break;
             case 6://BIT_STRING
+                //todo
+                break;
             case 7://NOTNULL
+                ctx.value = new Value(Type.NOTNULL);
+                break;
             case 8://(NULL_LITERAL | NULL_SPEC_LITERAL)
-            default:
+                ctx.value = new Value(Type.NULL);
+                break;
         }
-        ctx.value = new Value(DataType.String, text);
-        logger.info("constant:{}", text);
         return ctx;
     }
 

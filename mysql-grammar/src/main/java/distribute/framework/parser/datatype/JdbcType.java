@@ -1,0 +1,20 @@
+package distribute.framework.parser.datatype;
+
+public enum JdbcType {
+
+    //string
+    CHAR, VARCHAR, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT,
+
+    //int
+    TINYINT, SMALLINT, MEDIUMINT, INT, INTEGER, BIGINT,
+
+    REAL, DOUBLE, FLOAT,
+
+    DECIMAL, NUMERIC,
+
+    DATE, YEAR, TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB,
+
+    BIT, TIME, TIMESTAMP, DATETIME, BINARY, VARBINARY,
+
+    ENUM, SET;
+}

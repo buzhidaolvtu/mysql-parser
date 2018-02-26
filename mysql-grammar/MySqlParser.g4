@@ -30,7 +30,6 @@ options { tokenVocab=MySqlLexer; }
 @header{
     package com.antlr.grammarsv4.mysql;
     import distribute.framework.parser.Value;
-    import distribute.framework.parser.expression.*;
 }
 
 // Top Level Description
