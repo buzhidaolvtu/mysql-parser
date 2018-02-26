@@ -3,8 +3,16 @@ package distribute.framework.parser;
 import distribute.framework.parser.datatype.DataType;
 
 public class Value {
+
+    public final static Value TRUE = new Value(DataType.Bool);
+    public final static Value FALSE = new Value(DataType.Bool);
+
     private DataType type;
     private Object value;
+
+    public Value(DataType type){
+        this(type,null);
+    }
 
     public Value(DataType type, Object value) {
         this.type = type;

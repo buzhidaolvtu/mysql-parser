@@ -5,8 +5,6 @@ public interface DataType {
     SqlString String = new SqlString();
     SqlNumber Number = new SqlNumber();
     SqlBool Bool = new SqlBool();
-    SqlBool TRUE = new SqlBool();
-    SqlBool FALSE = new SqlBool();
 
     boolean isString();
 

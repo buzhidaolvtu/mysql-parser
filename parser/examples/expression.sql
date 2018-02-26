@@ -1,5 +1,5 @@
       (
-        (BF.ID IN (1 ,2))
+        (BF.ID IN (1 ,2,'a','cccdd',0xff))
 				AND
 				(
 					FUT_RENEW.LAST_VISIT IS NULL

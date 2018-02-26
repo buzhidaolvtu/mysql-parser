@@ -13,9 +13,6 @@ public class NotExpression {
     public Value evaluate(MySqlParser.ExpressionContext e1){
         logger.info("NotExpression evaluate,e1:{}",e1.getText());
 
-        if(e1 == null){
-            return new Value(DataType.Bool,DataType.FALSE);
-        }
-        return new Value(DataType.Bool,DataType.TRUE);
+        return null;
     }
 }

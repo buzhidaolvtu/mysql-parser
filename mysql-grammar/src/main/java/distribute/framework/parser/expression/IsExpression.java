@@ -13,6 +13,6 @@ public class IsExpression {
     public Value evaluate(MySqlParser.Boolean_primaryContext e1){
         logger.info("IsExpression evaluate,e1:{}",e1.getText());
 
-        return new Value(DataType.Bool,DataType.FALSE);
+        return null;
     }
 }
