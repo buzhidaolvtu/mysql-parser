@@ -2,6 +2,8 @@ package distribute.framework.dsql;
 
 import com.antlr.grammarsv4.mysql.MySqlLexer;
 import com.antlr.grammarsv4.mysql.MySqlParser;
+import org.antlr.v4.gui.TreeViewer;
+import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.*;
 
 public class DSQL {
@@ -16,9 +18,10 @@ public class DSQL {
             TokenStream tokenStream = new CommonTokenStream(lexer);
             MySqlParser parser = new MySqlParser(tokenStream);
             MySqlParser.ExpressionContext expression = parser.expression();
-            MyVisitor visitor = new MyVisitor();
-            MySqlParser.ExpressionContext expressionContext = (MySqlParser.ExpressionContext)visitor.visit(expression);
-            System.out.println(expressionContext.value);
+//            MyVisitor visitor = new MyVisitor();
+//            MySqlParser.ExpressionContext expressionContext = (MySqlParser.ExpressionContext)visitor.visit(expression);
+//            System.out.println(expressionContext.value);
+            Trees.inspect(expression, parser);
         } catch (Exception e) {
             e.printStackTrace();
         }
