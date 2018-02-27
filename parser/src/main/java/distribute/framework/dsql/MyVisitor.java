@@ -370,7 +370,7 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
         switch (ctx.pn) {
             case 1://string_literal
                 text = text.replaceAll("'", "");
-                ctx.value = new Value(DataType.String, text);
+//                ctx.value = new Value(DataType.String, text);
                 break;
             case 2://decimal_literal
                 break;
@@ -385,7 +385,7 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
             case 8://(NULL_LITERAL | NULL_SPEC_LITERAL)
             default:
         }
-        ctx.value = new Value(DataType.String, text);
+//        ctx.value = new Value(DataType.String, text);
         logger.info("constant:{}", text);
         return ctx;
     }

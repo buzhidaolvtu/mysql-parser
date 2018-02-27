@@ -18,7 +18,7 @@ public class DSQL {
             MySqlParser.ExpressionContext expression = parser.expression();
             MyVisitor visitor = new MyVisitor();
             MySqlParser.ExpressionContext expressionContext = (MySqlParser.ExpressionContext)visitor.visit(expression);
-//            System.out.println(expressionContext.value);
+            System.out.println(expressionContext.value);
         } catch (Exception e) {
             e.printStackTrace();
         }
