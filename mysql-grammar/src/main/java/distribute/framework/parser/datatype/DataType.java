@@ -1,6 +1,6 @@
 package distribute.framework.parser.datatype;
 
-public enum JdbcType {
+public enum DataType {
 
     //string
     CHAR, VARCHAR, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT,

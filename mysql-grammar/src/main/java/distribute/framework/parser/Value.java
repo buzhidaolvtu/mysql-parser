@@ -1,17 +1,17 @@
 package distribute.framework.parser;
 
-import distribute.framework.parser.datatype.Type;
+import distribute.framework.parser.datatype.ValueType;
 
 public class Value {
 
-    private Type type;
+    private ValueType type;
     private Object value;
 
-    public Value(Type type){
+    public Value(ValueType type){
         this(type,null);
     }
 
-    public Value(Type type, Object value) {
+    public Value(ValueType type, Object value) {
         this.type = type;
         this.value = value;
     }

@@ -4,7 +4,7 @@ package distribute.framework.dsql;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.parser.Value;
-import distribute.framework.parser.datatype.Type;
+import distribute.framework.parser.datatype.ValueType;
 import distribute.framework.parser.operator.OpType;
 import distribute.framework.parser.operator.Operator;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -400,10 +400,10 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
         switch (ctx.pn) {
             case 1://string_literal
                 text = text.replaceAll("'", "");
-                ctx.value = new Value(Type.STRING, text);
+                ctx.value = new Value(ValueType.STRING, text);
                 break;
             case 2://decimal_literal
-                ctx.value = new Value(Type.NUMBER, Integer.parseInt(text));
+                ctx.value = new Value(ValueType.NUMBER, Integer.parseInt(text));
                 break;
             case 3://hexadecimal_literal
                 text = text.replaceAll("0x", "");
@@ -411,22 +411,22 @@ public class MyVisitor extends MySqlParserBaseVisitor<ParserRuleContext> {
                 break;
             case 4://boolean_literal
                 if (text.equals("TRUE")) {
-                    ctx.value = new Value(Type.BOOLEAN, true);
+                    ctx.value = new Value(ValueType.BOOLEAN, true);
                 } else {
-                    ctx.value = new Value(Type.BOOLEAN, false);
+                    ctx.value = new Value(ValueType.BOOLEAN, false);
                 }
                 break;
             case 5://REAL_LITERAL
-                ctx.value = new Value(Type.NUMBER, Double.parseDouble(text));
+                ctx.value = new Value(ValueType.NUMBER, Double.parseDouble(text));
                 break;
             case 6://BIT_STRING
                 //todo
                 break;
             case 7://NOTNULL
-                ctx.value = new Value(Type.NOTNULL);
+                ctx.value = new Value(ValueType.NOTNULL);
                 break;
             case 8://(NULL_LITERAL | NULL_SPEC_LITERAL)
-                ctx.value = new Value(Type.NULL);
+                ctx.value = new Value(ValueType.NULL);
                 break;
         }
         return ctx;

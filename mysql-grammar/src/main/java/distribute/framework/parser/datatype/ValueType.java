@@ -1,6 +1,6 @@
 package distribute.framework.parser.datatype;
 
-public enum Type {
+public enum ValueType {
 
     STRING,
     NUMBER,

@@ -2,9 +2,12 @@ package distribute.framework.dsql;
 
 import com.antlr.grammarsv4.mysql.MySqlLexer;
 import com.antlr.grammarsv4.mysql.MySqlParser;
+import distribute.framework.ast.AstNode;
 import org.antlr.v4.gui.TreeViewer;
-import org.antlr.v4.gui.Trees;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenStream;
 
 public class DSQL {
 
@@ -21,7 +24,12 @@ public class DSQL {
 //            MyVisitor visitor = new MyVisitor();
 //            MySqlParser.ExpressionContext expressionContext = (MySqlParser.ExpressionContext)visitor.visit(expression);
 //            System.out.println(expressionContext.value);
-            Trees.inspect(expression, parser);
+            AstNode root = new AstNode(null);
+            TransformVisitor transformVisitor = new TransformVisitor(root);
+            transformVisitor.visit(expression);
+            TreeViewer viewer = new TreeViewer(null, root);
+            viewer.open();
+//            Trees.inspect(expression, parser);
         } catch (Exception e) {
             e.printStackTrace();
         }

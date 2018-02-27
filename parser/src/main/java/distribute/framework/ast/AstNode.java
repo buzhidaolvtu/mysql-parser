@@ -1,6 +1,5 @@
 package distribute.framework.ast;
 
-import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.runtime.tree.Tree;
 
 import java.util.ArrayList;
@@ -19,8 +18,11 @@ public class AstNode implements Tree {
     protected List<AstNode> children = new ArrayList<>();
 
     public AstNode(AstNode parent) {
-        this.name = "";
+        this.name = "root";
         this.parent = parent;
+        if(parent!=null){
+            parent.addNode(this);
+        }
     }
 
     public void addNode(AstNode node) {
@@ -34,7 +36,7 @@ public class AstNode implements Tree {
 
     @Override
     public Object getPayload() {
-        return null;
+        return name;
     }
 
     @Override
