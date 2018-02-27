@@ -29,7 +29,8 @@
     <dependencies>
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
+            <!--<artifactId>antlr4-runtime</artifactId>-->
+            <artifactId>antlr4</artifactId>
             <version>${antlr.version}</version>
             <type>jar</type>
             <scope>compile</scope>
