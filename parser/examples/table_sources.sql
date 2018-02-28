@@ -1,0 +1,13 @@
+(
+b_forum BF
+LEFT JOIN b_forum_user_forum FUF ON (FUF.USER_ID = 1 AND FUF.FORUM_ID = BF.ID)
+)
+RIGHT JOIN b_forum_user_forum FUF ON (FUF.USER_ID = 1 AND FUF.FORUM_ID = BF.ID),payment as p
+-- LEFT JOIN b_forum_user_forum FUF_ALL ON (FUF_ALL.USER_ID =  1 AND FUF_ALL.FORUM_ID =  0)
+-- LEFT JOIN b_forum_topic FT_RENEW ON
+--   (
+--     BF.ID = FT_RENEW.FORUM_ID AND FT_RENEW.STATE != 'L' AND
+--     (FUF_ALL.LAST_VISIT IS NULL OR FT_RENEW.ABS_LAST_POST_DATE >  FUF_ALL.LAST_VISIT)
+--   )
+-- LEFT JOIN b_forum_user_topic FUT_RENEW ON (
+--     FUT_RENEW.FORUM_ID =  BF.ID AND FUT_RENEW.TOPIC_ID =  FT_RENEW.ID AND FUT_RENEW.USER_ID =  1)

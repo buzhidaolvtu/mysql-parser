@@ -20,17 +20,33 @@ public class AstNode implements Tree {
     public AstNode(AstNode parent) {
         this.name = "root";
         this.parent = parent;
-        if(parent!=null){
-            parent.addNode(this);
+        if (parent != null) {
+            parent.addChild(this);
         }
     }
 
-    public void addNode(AstNode node) {
+    public void addChild(AstNode node) {
         children.add(node);
     }
 
+    public void addChild(AstNode node, int pos) {
+        children.add(pos, node);
+    }
+
+    public void removeChild(AstNode node) {
+        children.remove(node);
+    }
+
+    public void removeChild(AstNode node, int pos) {
+        children.remove(pos);
+    }
+
+    public void setParent(AstNode parent) {
+        this.parent = parent;
+    }
+
     @Override
-    public Tree getParent() {
+    public AstNode getParent() {
         return parent;
     }
 
@@ -40,7 +56,7 @@ public class AstNode implements Tree {
     }
 
     @Override
-    public Tree getChild(int i) {
+    public AstNode getChild(int i) {
         return children.get(i);
     }
 

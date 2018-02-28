@@ -3,7 +3,9 @@ package distribute.framework.dsql;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.ast.*;
+import org.antlr.v4.runtime.tree.Tree;
 
+import java.util.List;
 import java.util.Stack;
 
 
@@ -411,5 +413,101 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         return super.visitSubquerySimpleExpr(ctx);
     }
 
-    //
+    //table_sources
+    @Override
+    public Object visitTable_sources(MySqlParser.Table_sourcesContext ctx) {
+        List<MySqlParser.Table_sourceContext> table_sourceContexts = ctx.table_source();
+        if (table_sourceContexts.size() == 1) {
+            return super.visitTable_sources(ctx);
+        }
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeTables(parent);
+        stack.push(node);
+        Object o = super.visitTable_sources(ctx);
+        stack.pop();
+        return o;
+    }
+
+    //todo join
+    @Override
+    public Object visitTable_source(MySqlParser.Table_sourceContext ctx) {
+        List<MySqlParser.Join_partContext> join_partContexts = ctx.join_part();
+        if (join_partContexts == null || join_partContexts.size() == 0) {
+            return super.visitTable_source(ctx);
+        }
+        AstNode parent = stack.peek();
+        int size = join_partContexts.size();
+        ctx.table_source_item().accept(this);
+        for (int i = 0; i < size; i++) {
+            MySqlParser.Join_partContext join_partContext = join_partContexts.get(i);
+            join_partContext.accept(this);
+            AstNode child = parent.getChild(parent.getChildCount() - 1);
+        }
+        return null;
+    }
+
+    @Override
+    public Object visitAtomTableItem(MySqlParser.AtomTableItemContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeSimpleTable(parent);
+        stack.push(node);
+        Object o = super.visitAtomTableItem(ctx);
+        stack.pop();
+        return o;
+    }
+
+    @Override
+    public Object visitSubqueryTableItem(MySqlParser.SubqueryTableItemContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeSubqueryTable(parent);
+        stack.push(node);
+        Object o = super.visitSubqueryTableItem(ctx);
+        stack.pop();
+        return o;
+    }
+
+    @Override
+    public Object visitTableSourcesItem(MySqlParser.TableSourcesItemContext ctx) {
+        return super.visitTableSourcesItem(ctx);
+    }
+
+    @Override
+    public Object visitInnerJoin(MySqlParser.InnerJoinContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeJoin(parent, "inner");
+        stack.push(node);
+        Object o = super.visitInnerJoin(ctx);
+        stack.pop();
+        return o;
+    }
+
+    @Override
+    public Object visitStraightJoin(MySqlParser.StraightJoinContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeJoin(parent, "straight");
+        stack.push(node);
+        Object o = super.visitStraightJoin(ctx);
+        stack.pop();
+        return o;
+    }
+
+    @Override
+    public Object visitOuterJoin(MySqlParser.OuterJoinContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeJoin(parent, ctx.LEFT() != null ? ctx.LEFT().getText() : ctx.RIGHT().getText());
+        stack.push(node);
+        Object o = super.visitOuterJoin(ctx);
+        stack.pop();
+        return o;
+    }
+
+    @Override
+    public Object visitNaturalJoin(MySqlParser.NaturalJoinContext ctx) {
+        AstNode parent = stack.peek();
+        AstNode node = new AstNodeJoin(parent, "natural");
+        stack.push(node);
+        Object o = super.visitNaturalJoin(ctx);
+        stack.pop();
+        return o;
+    }
 }

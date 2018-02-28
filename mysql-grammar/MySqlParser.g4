@@ -899,7 +899,6 @@ table_sources
 
 table_source
     : table_source_item join_part*
-   | '(' table_source_item join_part* ')'
    ;
 
 table_source_item
