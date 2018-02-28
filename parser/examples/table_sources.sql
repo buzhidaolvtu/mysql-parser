@@ -1,6 +1,7 @@
 (
 b_forum BF
 LEFT JOIN b_forum_user_forum FUF ON (FUF.USER_ID = 1 AND FUF.FORUM_ID = BF.ID)
+JOIN b_forum_user_forum FUF ON (FUF.USER_ID = 1 AND FUF.FORUM_ID = BF.ID)
 )
 RIGHT JOIN b_forum_user_forum FUF ON (FUF.USER_ID = 1 AND FUF.FORUM_ID = BF.ID),payment as p
 -- LEFT JOIN b_forum_user_forum FUF_ALL ON (FUF_ALL.USER_ID =  1 AND FUF_ALL.FORUM_ID =  0)

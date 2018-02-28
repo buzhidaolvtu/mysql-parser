@@ -2,8 +2,6 @@ package distribute.framework.dsql;
 
 import com.antlr.grammarsv4.mysql.MySqlLexer;
 import com.antlr.grammarsv4.mysql.MySqlParser;
-import distribute.framework.ast.AstNode;
-import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -24,6 +22,13 @@ public class AnalysisFromTable {
             MySqlParser.Table_sourcesContext table_sourcesContext = parser.table_sources();
 
             Trees.inspect(table_sourcesContext, parser);
+
+//            AstNode root = new AstNode(null);
+//            TransformVisitor transformVisitor = new TransformVisitor(root);
+//            transformVisitor.visit(table_sourcesContext);
+//            TreeViewer viewer = new TreeViewer(null, root);
+//            viewer.open();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,7 +3,6 @@ package distribute.framework.dsql;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.ast.*;
-import org.antlr.v4.runtime.tree.Tree;
 
 import java.util.List;
 import java.util.Stack;
@@ -438,12 +437,22 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         AstNode parent = stack.peek();
         int size = join_partContexts.size();
         ctx.table_source_item().accept(this);
+        AstNode preJoinNode = null;
         for (int i = 0; i < size; i++) {
             MySqlParser.Join_partContext join_partContext = join_partContexts.get(i);
-            this.visit(join_partContext);
-            join_partContext.accept(this);
-            AstNode child = parent.getChild(parent.getChildCount() - 1);
+            AstNode joinNode = (AstNode) this.visit(join_partContext);
+
+            if (i == 0) {
+                stack.push(joinNode);
+                visit(ctx.table_source_item());
+                stack.pop();
+                preJoinNode = joinNode;
+            } else {
+                joinNode.addChild(preJoinNode, 0);
+                preJoinNode = joinNode;
+            }
         }
+        parent.addChild(preJoinNode);
         return null;
     }
 
