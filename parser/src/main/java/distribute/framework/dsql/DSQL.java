@@ -22,12 +22,8 @@ public class DSQL {
             TokenStream tokenStream = new CommonTokenStream(lexer);
             MySqlParser parser = new MySqlParser(tokenStream);
             MySqlParser.ExpressionContext expression = parser.expression();
-//            MyVisitor visitor = new MyVisitor();
-//            MySqlParser.ExpressionContext expressionContext = (MySqlParser.ExpressionContext)visitor.visit(expression);
-//            System.out.println(expressionContext.value);
 
             Trees.inspect(expression, parser);
-
             AstNode root = new AstNode(null);
             TransformVisitor transformVisitor = new TransformVisitor(root);
             transformVisitor.visit(expression);
