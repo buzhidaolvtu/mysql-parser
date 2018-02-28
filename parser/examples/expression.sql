@@ -1,5 +1,5 @@
       (
-        (BF.ID IN (1 ,2,'a','cccdd',0xff))
+        (BF.ID IN (-1 ,+2,'a','cccdd',0xff) and BF.AMOUND >= 1000)
 				AND
 				(
 					FUT_RENEW.LAST_VISIT IS NULL
@@ -10,7 +10,7 @@
 						(
 							FUF.LAST_VISIT IS NOT NULL
 							AND
-							(FUF.LAST_VISIT <  FT_RENEW.ABS_LAST_POST_DATE OR FUF.LAST_VISIT <  FT_RENEW.LAST_POST_DATE)
+							! (FUF.LAST_VISIT <  FT_RENEW.ABS_LAST_POST_DATE OR FUF.LAST_VISIT <  FT_RENEW.LAST_POST_DATE)
 						)
 						OR
 						(

@@ -392,7 +392,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     @Override
     public Object visitNegtiveSimpleExpr(MySqlParser.NegtiveSimpleExprContext ctx) {
         AstNode parent = stack.peek();
-        AstNode node = new AstNodePositive(parent);
+        AstNode node = new AstNodeNegtive(parent);
         stack.push(node);
         Object o = super.visitNegtiveSimpleExpr(ctx);
         stack.pop();
