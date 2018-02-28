@@ -440,6 +440,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         ctx.table_source_item().accept(this);
         for (int i = 0; i < size; i++) {
             MySqlParser.Join_partContext join_partContext = join_partContexts.get(i);
+            this.visit(join_partContext);
             join_partContext.accept(this);
             AstNode child = parent.getChild(parent.getChildCount() - 1);
         }
@@ -473,41 +474,37 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitInnerJoin(MySqlParser.InnerJoinContext ctx) {
-        AstNode parent = stack.peek();
-        AstNode node = new AstNodeJoin(parent, "inner");
+        AstNode node = new AstNodeJoin(null, "inner");
         stack.push(node);
         Object o = super.visitInnerJoin(ctx);
         stack.pop();
-        return o;
+        return node;
     }
 
     @Override
     public Object visitStraightJoin(MySqlParser.StraightJoinContext ctx) {
-        AstNode parent = stack.peek();
-        AstNode node = new AstNodeJoin(parent, "straight");
+        AstNode node = new AstNodeJoin(null, "straight");
         stack.push(node);
         Object o = super.visitStraightJoin(ctx);
         stack.pop();
-        return o;
+        return node;
     }
 
     @Override
     public Object visitOuterJoin(MySqlParser.OuterJoinContext ctx) {
-        AstNode parent = stack.peek();
-        AstNode node = new AstNodeJoin(parent, ctx.LEFT() != null ? ctx.LEFT().getText() : ctx.RIGHT().getText());
+        AstNode node = new AstNodeJoin(null, ctx.LEFT() != null ? ctx.LEFT().getText() : ctx.RIGHT().getText());
         stack.push(node);
         Object o = super.visitOuterJoin(ctx);
         stack.pop();
-        return o;
+        return node;
     }
 
     @Override
     public Object visitNaturalJoin(MySqlParser.NaturalJoinContext ctx) {
-        AstNode parent = stack.peek();
-        AstNode node = new AstNodeJoin(parent, "natural");
+        AstNode node = new AstNodeJoin(null, "natural");
         stack.push(node);
         Object o = super.visitNaturalJoin(ctx);
         stack.pop();
-        return o;
+        return node;
     }
 }
