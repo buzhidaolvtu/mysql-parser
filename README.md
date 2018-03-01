@@ -11,9 +11,12 @@
 * 客户端解析SQL并分解成小SQL，可以在分库分表时使用
 
 ## demo
-### ast tree
+### 语法推导树
 ![语法推导树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/syntax%20derivation%20parse%20tree.png)
+### 抽象语法树
 ![抽象语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/simpfied%20ast%20tree.png)
+### table语法树
+![table语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/table%20ast%20tree.png)
   
 ## reference  
 [运算符优先级与结合顺序](https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687077/Operator+precedence+parser)
