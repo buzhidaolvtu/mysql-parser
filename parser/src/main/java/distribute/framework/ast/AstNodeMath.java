@@ -4,7 +4,6 @@ package distribute.framework.ast;
 //-, +
 public class AstNodeMath extends AstNode{
     public AstNodeMath(AstNode parent) {
-        super(parent);
-        this.name = "Math";
+        super(parent,"Math");
     }
 }

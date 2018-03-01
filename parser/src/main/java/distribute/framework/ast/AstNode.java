@@ -17,8 +17,12 @@ public class AstNode implements Tree {
 
     protected List<AstNode> children = new ArrayList<>();
 
-    public AstNode(AstNode parent) {
-        this.name = "root";
+    public AstNode(String name) {
+        this(null, name);
+    }
+
+    public AstNode(AstNode parent, String name) {
+        this.name = name != null ? name.replaceAll(" ", "•") : name;
         this.parent = parent;
         if (parent != null) {
             parent.addChild(this);
@@ -43,6 +47,9 @@ public class AstNode implements Tree {
 
     public void setParent(AstNode parent) {
         this.parent = parent;
+        if (parent != null) {
+            parent.addChild(this);
+        }
     }
 
     @Override

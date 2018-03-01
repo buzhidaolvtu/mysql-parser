@@ -5,8 +5,7 @@ import org.antlr.v4.runtime.tree.Tree;
 public class AstNodeAnd extends AstNode{
 
     public AstNodeAnd(AstNode parent) {
-        super(parent);
-        this.name = "And";
+        super(parent,"And");
     }
 
     @Override

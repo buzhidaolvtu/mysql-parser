@@ -3,7 +3,6 @@ package distribute.framework.ast;
 public class AstNodeBitAnd extends AstNode{
 
     public AstNodeBitAnd(AstNode parent) {
-        super(parent);
-        this.name = "BitAnd";
+        super(parent,"BitAnd");
     }
 }

@@ -24,11 +24,13 @@ public class DSQL {
             MySqlParser.ExpressionContext expression = parser.expression();
 
             Trees.inspect(expression, parser);
-            AstNode root = new AstNode(null);
+
+            AstNode root = new AstNode("root");
             TransformVisitor transformVisitor = new TransformVisitor(root);
-            transformVisitor.visit(expression);
+            transformVisitor.visit(expression);//不要调用accept方法，因为visit方法被重写了
             TreeViewer viewer = new TreeViewer(null, root);
             viewer.open();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
