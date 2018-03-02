@@ -1,0 +1,1 @@
+ABS( ABS(FT_RENEW.ID,'parameter') ,'parameter2')

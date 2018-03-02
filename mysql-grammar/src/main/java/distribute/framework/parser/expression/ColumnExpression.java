@@ -8,7 +8,22 @@ public class ColumnExpression {
 
     private final static Logger logger = LoggerFactory.getLogger(ColumnExpression.class);
 
-    private String databaseName;
-    private String tableName;
-    private String columnName;
+    public String databaseName;
+    public String tableName;
+    public String columnName;
+
+    @Override
+    public String toString() {
+        String column = "";
+        if (databaseName != null) {
+            column += databaseName + ".";
+        }
+        if (tableName != null) {
+            column += tableName + ".";
+        }
+        if (columnName != null) {
+            column += columnName;
+        }
+        return column;
+    }
 }

@@ -3,11 +3,14 @@ package distribute.framework.dsql;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.ast.*;
+import distribute.framework.parser.Value;
+import distribute.framework.parser.datatype.ValueType;
+import distribute.framework.parser.expression.ColumnExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.List;
-import java.util.Stack;
 
 
 public class TransformVisitor extends MySqlParserBaseVisitor {
@@ -332,8 +335,6 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitColumnSimpleExpr(MySqlParser.ColumnSimpleExprContext ctx) {
-
-        new AstNodeColumnExpr(current);
         return super.visitColumnSimpleExpr(ctx);
     }
 
@@ -355,7 +356,6 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitConstantSimpleExpr(MySqlParser.ConstantSimpleExprContext ctx) {
-        new AstNodeConstantExpr(current);
         return super.visitConstantSimpleExpr(ctx);
     }
 
@@ -402,7 +402,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     @Override
     public Object visitFunctionSimpleExpr(MySqlParser.FunctionSimpleExprContext ctx) {
 
-        new AstNodeFunctionExpr(current);
+        new AstNodeFunctionCall(current);
         return super.visitFunctionSimpleExpr(ctx);
     }
 
@@ -428,6 +428,66 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         return super.visitSubquerySimpleExpr(ctx);
     }
 
+    @Override
+    public ParserRuleContext visitConstant(MySqlParser.ConstantContext ctx) {
+        String text = ctx.getText();
+        new AstNodeConstant(current, text);
+        switch (ctx.pn) {
+            case 1://string_literal
+                text = text.replaceAll("'", "");
+                ctx.value = new Value(ValueType.STRING, text);
+                break;
+            case 2://decimal_literal
+                ctx.value = new Value(ValueType.NUMBER, Integer.parseInt(text));
+                break;
+            case 3://hexadecimal_literal
+                text = text.replaceAll("0x", "");
+                text = String.valueOf(Integer.parseInt(text, 16));
+                break;
+            case 4://boolean_literal
+                if (text.equals("TRUE")) {
+                    ctx.value = new Value(ValueType.BOOLEAN, true);
+                } else {
+                    ctx.value = new Value(ValueType.BOOLEAN, false);
+                }
+                break;
+            case 5://REAL_LITERAL
+                ctx.value = new Value(ValueType.NUMBER, Double.parseDouble(text));
+                break;
+            case 6://BIT_STRING
+                //todo
+                break;
+            case 7://NOTNULL
+                ctx.value = new Value(ValueType.NOTNULL);
+                break;
+            case 8://(NULL_LITERAL | NULL_SPEC_LITERAL)
+                ctx.value = new Value(ValueType.NULL);
+                break;
+        }
+        return ctx;
+    }
+
+    @Override
+    public ParserRuleContext visitFull_column_name(MySqlParser.Full_column_nameContext ctx) {
+        ColumnExpression columnExpression = new ColumnExpression();
+        String[] split = ctx.getText().split("\\.");
+        if (split.length == 1) {
+            columnExpression.columnName = split[0];
+        }
+        if (split.length == 2) {
+            columnExpression.tableName = split[0];
+            columnExpression.columnName = split[1];
+        }
+        if (split.length == 3) {
+            columnExpression.databaseName = split[0];
+            columnExpression.tableName = split[1];
+            columnExpression.columnName = split[2];
+        }
+        new AstNodeColumn(current, columnExpression);
+        return ctx;
+    }
+
+
     //table_sources
     @Override
     public Object visitTable_sources(MySqlParser.Table_sourcesContext ctx) {
@@ -446,6 +506,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     /**
      * 遍历的有问题，需要再思考怎样写更青春
+     *
      * @param ctx
      * @return
      */
@@ -537,4 +598,88 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         Object o = super.visitNaturalJoin(ctx);
         return node;
     }
+
+    //select list
+
+    @Override
+    public Object visitSelect_list(MySqlParser.Select_listContext ctx) {
+        AstNode node = new AstNodeSelectList(current);
+        resetCurrent(node);
+        Object o = super.visitSelect_list(ctx);
+        return o;
+    }
+
+    @Override
+    public Object visitSellistelAllCol(MySqlParser.SellistelAllColContext ctx) {
+        AstNode node = new AstNodeStarColumn(current);
+        return node;
+    }
+
+    @Override
+    public Object visitSellistelCol(MySqlParser.SellistelColContext ctx) {
+        String alias = null;
+        MySqlParser.Id_Context id_context = ctx.id_();
+        if (id_context != null) {
+            alias = id_context.getText();
+        }
+        AstNode node = new AstNodeSelectListItem(current, alias == null ? ctx.getText() : alias);
+        resetCurrent(node);
+        visit(ctx.full_column_name());
+        return node;
+    }
+
+    @Override
+    public Object visitSellistelFunc(MySqlParser.SellistelFuncContext ctx) {
+        String alias = null;
+        MySqlParser.Id_Context id_context = ctx.id_();
+        if (id_context != null) {
+            alias = id_context.getText();
+        }
+        AstNode node = new AstNodeSelectListItem(current, alias == null ? ctx.getText() : alias);
+        resetCurrent(node);
+        visit(ctx.function_call());
+        return node;
+    }
+
+    @Override
+    public Object visitSellistelExpr(MySqlParser.SellistelExprContext ctx) {
+        String alias = null;
+        MySqlParser.Id_Context id_context = ctx.id_();
+        if (id_context != null) {
+            alias = id_context.getText();
+        }
+        AstNode node = new AstNodeSelectListItem(current, alias == null ? ctx.getText() : alias);
+        resetCurrent(node);
+        Object o = super.visitSellistelExpr(ctx);
+        return node;
+    }
+
+    //funtion call
+    @Override
+    public Object visitAggregateFunctionCall(MySqlParser.AggregateFunctionCallContext ctx) {
+
+        return super.visitAggregateFunctionCall(ctx);
+    }
+
+    @Override
+    public Object visitScalarFunctionCall(MySqlParser.ScalarFunctionCallContext ctx) {
+        MySqlParser.Scalar_function_nameContext scalar_function_nameContext = ctx.scalar_function_name();
+        String functionName = scalar_function_nameContext.getText();
+        AstNode node = new AstNodeFunctionCall(current, functionName);
+        resetCurrent(node);
+        visit(ctx.function_args());
+        return node;
+    }
+
+    @Override
+    public Object visitSpecificFunctionCall(MySqlParser.SpecificFunctionCallContext ctx) {
+        return super.visitSpecificFunctionCall(ctx);
+    }
+
+    @Override
+    public Object visitUdfFunctionCall(MySqlParser.UdfFunctionCallContext ctx) {
+        //todo
+        return super.visitUdfFunctionCall(ctx);
+    }
+
 }

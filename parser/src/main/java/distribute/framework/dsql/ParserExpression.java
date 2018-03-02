@@ -10,25 +10,24 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-public class AnalysisFromTable {
+public class ParserExpression {
 
     public static void main(String[] args) {
         try {
-            String file = "parser/examples/table_sources.sql";
+            String file = "parser/examples/expression.sql";
             AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file, "UTF-8", CaseInsensitiveType.UPPER);
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
             MySqlLexer lexer = new MySqlLexer(charStream);
             TokenStream tokenStream = new CommonTokenStream(lexer);
             MySqlParser parser = new MySqlParser(tokenStream);
-            MySqlParser.Table_sourcesContext table_sourcesContext = parser.table_sources();
+            MySqlParser.ExpressionContext expression = parser.expression();
 
-//            Trees.inspect(table_sourcesContext, parser);
+//            Trees.inspect(expression, parser);
 
             AstNode root = new AstNode("root");
             TransformVisitor transformVisitor = new TransformVisitor(root);
-            transformVisitor.visit(table_sourcesContext);
-            System.out.println(root.toStringTree());
+            transformVisitor.visit(expression);//不要调用accept方法，因为visit方法被重写了
             TreeViewer viewer = new TreeViewer(null, root);
             viewer.open();
 
@@ -36,5 +35,4 @@ public class AnalysisFromTable {
             e.printStackTrace();
         }
     }
-
 }

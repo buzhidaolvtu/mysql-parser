@@ -2048,10 +2048,10 @@ scalar_function_name
    ;
 
 function_args
-    : (constant | full_column_name | function_call | expression)
+    : function_arg
    (
      ','
-     (constant | full_column_name | function_call | expression)
+     function_arg
    )*
    ;
 

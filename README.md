@@ -17,6 +17,12 @@
 ![抽象语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/simpfied%20ast%20tree.png)
 ### table语法树
 ![table语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/table%20ast%20tree.png)
+
+## understanding
+* select -> map  
+* from   -> source  
+* where  -> filer    
+类似于流式处理 source.stream().filter().map();
   
 ## reference  
 [运算符优先级与结合顺序](https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687077/Operator+precedence+parser)

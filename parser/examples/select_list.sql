@@ -1,0 +1,1 @@
+BF.ID AS FORUM_ID , COUNT(FT_RENEW.ID) TCRENEW, 1-1 as constant
