@@ -23,6 +23,9 @@
 * from   -> source  
 * where  -> filer    
 类似于流式处理 source.stream().filter().map();
+
+## 限制
+to be continued...
   
 ## reference  
 [运算符优先级与结合顺序](https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687077/Operator+precedence+parser)

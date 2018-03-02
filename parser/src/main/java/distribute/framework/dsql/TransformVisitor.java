@@ -401,8 +401,6 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitFunctionSimpleExpr(MySqlParser.FunctionSimpleExprContext ctx) {
-
-        new AstNodeFunctionCall(current);
         return super.visitFunctionSimpleExpr(ctx);
     }
 
@@ -431,7 +429,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     @Override
     public ParserRuleContext visitConstant(MySqlParser.ConstantContext ctx) {
         String text = ctx.getText();
-        new AstNodeConstant(current, text);
+        new AstNodeConstantExpr(current, text);
         switch (ctx.pn) {
             case 1://string_literal
                 text = text.replaceAll("'", "");
@@ -483,7 +481,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
             columnExpression.tableName = split[1];
             columnExpression.columnName = split[2];
         }
-        new AstNodeColumn(current, columnExpression);
+        new AstNodeColumnExpr(current, columnExpression);
         return ctx;
     }
 
@@ -665,7 +663,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     public Object visitScalarFunctionCall(MySqlParser.ScalarFunctionCallContext ctx) {
         MySqlParser.Scalar_function_nameContext scalar_function_nameContext = ctx.scalar_function_name();
         String functionName = scalar_function_nameContext.getText();
-        AstNode node = new AstNodeFunctionCall(current, functionName);
+        AstNode node = new AstNodeScalarFunctionCall(current, functionName);
         resetCurrent(node);
         visit(ctx.function_args());
         return node;
@@ -682,4 +680,64 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         return super.visitUdfFunctionCall(ctx);
     }
 
+    @Override
+    public Object visitSimpleSpecificFCall(MySqlParser.SimpleSpecificFCallContext ctx) {
+        return new AstNodeSpecificFunctionCall(current,ctx.getText());
+    }
+
+    @Override
+    public Object visitConvertDataTypeFCall(MySqlParser.ConvertDataTypeFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "ConvertDataType");
+        resetCurrent(node);
+        return super.visitConvertDataTypeFCall(ctx);
+    }
+
+    @Override
+    public Object visitValuesFCall(MySqlParser.ValuesFCallContext ctx) {
+        //todo
+        return super.visitValuesFCall(ctx);
+    }
+
+    @Override
+    public Object visitCaseFCall(MySqlParser.CaseFCallContext ctx) {
+        //todo
+        return super.visitCaseFCall(ctx);
+    }
+
+    @Override
+    public Object visitCharFCall(MySqlParser.CharFCallContext ctx) {
+        return super.visitCharFCall(ctx);
+    }
+
+    @Override
+    public Object visitPositionFCall(MySqlParser.PositionFCallContext ctx) {
+        return super.visitPositionFCall(ctx);
+    }
+
+    @Override
+    public Object visitSubstrFCall(MySqlParser.SubstrFCallContext ctx) {
+        return super.visitSubstrFCall(ctx);
+    }
+
+    @Override
+    public Object visitTrimFCall(MySqlParser.TrimFCallContext ctx) {
+        return super.visitTrimFCall(ctx);
+    }
+
+    @Override
+    public Object visitWeightFCall(MySqlParser.WeightFCallContext ctx) {
+        return super.visitWeightFCall(ctx);
+    }
+
+    @Override
+    public Object visitExtractFCall(MySqlParser.ExtractFCallContext ctx) {
+        return super.visitExtractFCall(ctx);
+    }
+
+    @Override
+    public Object visitGetFormatFCall(MySqlParser.GetFormatFCallContext ctx) {
+        return super.visitGetFormatFCall(ctx);
+    }
+
+    //end
 }
