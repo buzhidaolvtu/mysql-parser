@@ -23,7 +23,7 @@
 ## understanding
 * select -> map  
 * from   -> source  
-* where  -> filter
+* where  -> filter<br>
   类似于流式处理 source.stream().filter().map();
 
 ## 限制
