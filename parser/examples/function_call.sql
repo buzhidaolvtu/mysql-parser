@@ -1,1 +1,1 @@
-ABS( ABS(FT_RENEW.ID,'parameter') ,'parameter2')
+COUNT (ABS( ABS(FT_RENEW.ID,'parameter') ,'parameter2') )

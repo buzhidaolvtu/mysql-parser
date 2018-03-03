@@ -8,23 +8,27 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
-public class ParserSelectList {
+public class PaserQuery extends ParserDML {
+
+    public PaserQuery() {
+    }
 
     public static void main(String[] args) {
         try {
-            String file = "parser/examples/select_list.sql";
+            String file = "parser/examples/query.sql";
             AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file, "UTF-8", CaseInsensitiveType.UPPER);
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
             MySqlLexer lexer = new MySqlLexer(charStream);
             TokenStream tokenStream = new CommonTokenStream(lexer);
             MySqlParser parser = new MySqlParser(tokenStream);
-            MySqlParser.Select_listContext select_listContext = parser.select_list();
+            ParseTree tree = parser.select_statement();
 
             AstNode root = new AstNode("root");
             TransformVisitor transformVisitor = new TransformVisitor(root);
-            transformVisitor.visit(select_listContext);
+            transformVisitor.visit(tree);
             System.out.println(root.toStringTree());
             TreeViewer viewer = new TreeViewer(null, root);
             viewer.open();
@@ -32,5 +36,6 @@ public class ParserSelectList {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }

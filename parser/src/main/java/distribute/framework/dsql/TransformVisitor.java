@@ -53,6 +53,39 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         return result;
     }
 
+    //select_statement
+    @Override
+    public Object visitSimpleSelect(MySqlParser.SimpleSelectContext ctx) {
+        AstNodeSimpleSelect node = new AstNodeSimpleSelect(current, "simple select");
+        resetCurrent(node);
+        MySqlParser.Query_specificationContext query_specificationContext = ctx.query_specification();
+
+        MySqlParser.Select_listContext select_listContext = query_specificationContext.select_list();
+        AstNode map = new AstNode(node,"map");
+        node.map = map;
+        resetCurrent(map);
+        visit(select_listContext);
+
+        MySqlParser.From_clauseContext from_clauseContext = query_specificationContext.from_clause();
+        if(from_clauseContext.FROM()!=null){
+            AstNode source = new AstNode(node,"source");
+            node.source = source;
+            resetCurrent(source);
+            MySqlParser.Table_sourcesContext table_sourcesContext = from_clauseContext.table_sources();
+            visit(table_sourcesContext);
+        }
+
+        if (from_clauseContext.WHERE() != null) {
+            AstNode filter = new AstNode(node,"filter");
+            node.filter = filter;
+            resetCurrent(filter);
+            MySqlParser.ExpressionContext expression = from_clauseContext.expression(0);
+            visit(expression);
+        }
+
+        return node;
+    }
+
     //expression
     @Override
     public Object visitIsExpression(MySqlParser.IsExpressionContext ctx) {
@@ -655,7 +688,8 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     //funtion call
     @Override
     public Object visitAggregateFunctionCall(MySqlParser.AggregateFunctionCallContext ctx) {
-
+        AstNode node = new AstNodeAggregateFunctionCall(current, "AggregateFunctionCall");
+        resetCurrent(node);
         return super.visitAggregateFunctionCall(ctx);
     }
 
@@ -682,7 +716,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitSimpleSpecificFCall(MySqlParser.SimpleSpecificFCallContext ctx) {
-        return new AstNodeSpecificFunctionCall(current,ctx.getText());
+        return new AstNodeSpecificFunctionCall(current, ctx.getText());
     }
 
     @Override
@@ -695,49 +729,66 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     @Override
     public Object visitValuesFCall(MySqlParser.ValuesFCallContext ctx) {
         //todo
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Values");
+        resetCurrent(node);
         return super.visitValuesFCall(ctx);
     }
 
     @Override
     public Object visitCaseFCall(MySqlParser.CaseFCallContext ctx) {
         //todo
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Case");
+        resetCurrent(node);
         return super.visitCaseFCall(ctx);
     }
 
     @Override
     public Object visitCharFCall(MySqlParser.CharFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Char");
+        resetCurrent(node);
         return super.visitCharFCall(ctx);
     }
 
     @Override
     public Object visitPositionFCall(MySqlParser.PositionFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Position");
+        resetCurrent(node);
         return super.visitPositionFCall(ctx);
     }
 
     @Override
     public Object visitSubstrFCall(MySqlParser.SubstrFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Substr");
+        resetCurrent(node);
         return super.visitSubstrFCall(ctx);
     }
 
     @Override
     public Object visitTrimFCall(MySqlParser.TrimFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Trim");
+        resetCurrent(node);
         return super.visitTrimFCall(ctx);
     }
 
     @Override
     public Object visitWeightFCall(MySqlParser.WeightFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Weight");
+        resetCurrent(node);
         return super.visitWeightFCall(ctx);
     }
 
     @Override
     public Object visitExtractFCall(MySqlParser.ExtractFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "Extract");
+        resetCurrent(node);
         return super.visitExtractFCall(ctx);
     }
 
     @Override
     public Object visitGetFormatFCall(MySqlParser.GetFormatFCallContext ctx) {
+        AstNode node = new AstNodeSpecificFunctionCall(current, "GetFormat");
+        resetCurrent(node);
         return super.visitGetFormatFCall(ctx);
     }
-
     //end
 }

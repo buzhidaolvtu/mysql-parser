@@ -17,11 +17,13 @@
 ![抽象语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/simpfied%20ast%20tree.png)
 ### table语法树
 ![table语法树](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/table%20ast%20tree.png)
+### query tree
+![query tree](https://github.com/buzhidaolvtu/mysql-parser/blob/master/demo/query.png)
 
 ## understanding
 * select -> map  
 * from   -> source  
-* where  -> filer    
+* where  -> filter
 类似于流式处理 source.stream().filter().map();
 
 ## 限制
@@ -29,3 +31,5 @@ to be continued...
   
 ## reference  
 [运算符优先级与结合顺序](https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687077/Operator+precedence+parser)
+* 不同结合顺序一定有不同的优先级
+* 相同优先级一定有相同的结合顺序（其实是上面命题的等价表示）
