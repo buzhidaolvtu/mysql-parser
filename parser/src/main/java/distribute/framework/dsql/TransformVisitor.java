@@ -5,7 +5,6 @@ import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.ast.*;
 import distribute.framework.parser.Value;
 import distribute.framework.parser.datatype.Type;
-import distribute.framework.parser.datatype.ValueType;
 import distribute.framework.parser.expression.ColumnExpression;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;

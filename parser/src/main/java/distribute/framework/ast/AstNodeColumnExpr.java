@@ -10,6 +10,4 @@ public class AstNodeColumnExpr extends AstNode {
     public AstNodeColumnExpr(AstNode parent, ColumnExpression columnExpression) {
         super(parent,columnExpression.toString());
     }
-
-
 }
