@@ -1754,7 +1754,13 @@ user_name
 mysql_variable
     : LOCAL_ID
    | GLOBAL_ID
+   | mybatis_var
    ;
+
+mybatis_var
+    :  POUND '{' id_  '}'
+    |  DOLLAR '{' id_  '}'
+    ;
 
 charset_name
     : BINARY

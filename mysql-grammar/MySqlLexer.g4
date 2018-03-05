@@ -31,16 +31,26 @@ channels { MYSQLCOMMENT, ERRORCHANNEL }
     package com.antlr.grammarsv4.mysql;
 }
 
+@members {
+    public boolean support_mybatis = false;
+}
+
 // SKIP
 
 SPACE:                               [ \t\r\n]+    -> channel(HIDDEN);
 SPEC_MYSQL_COMMENT:                  '/*!' .+? '*/' -> channel(MYSQLCOMMENT);
 COMMENT_INPUT:                       '/*' .*? '*/' -> channel(HIDDEN);
+
 LINE_COMMENT:                        (
-                                       ('-- ' | '#') ~[\r\n]* ('\r'? '\n' | EOF)
+                                       ('-- ' | {!support_mybatis}?'#') ~[\r\n]* ('\r'? '\n' | EOF)
                                        | '--' ('\r'? '\n' | EOF)
                                      ) -> channel(HIDDEN);
 
+//mybatis variable defination
+POUND:   '#';
+DOLLAR:  '$';
+L_BRACE: '{';
+R_BRACE: '}';
 
 // Keywords
 // Common Keywords

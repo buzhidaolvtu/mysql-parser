@@ -1,6 +1,6 @@
 package distribute.framework.parser.datatype;
 
-public enum DataType {
+public enum Type {
 
     //string
     CHAR, VARCHAR, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT,

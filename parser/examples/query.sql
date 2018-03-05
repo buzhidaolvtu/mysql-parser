@@ -1,4 +1,7 @@
 select
+  #{var1},
+  ${var2},
+  BF.ID,
   BF.ID AS FORUM_ID , COUNT(FT_RENEW.ID) TCRENEW, 1-1 as constant,ABS( ABS(FT_RENEW.ID,'parameter') ,'parameter2') as abs
 from
   b_forum BF

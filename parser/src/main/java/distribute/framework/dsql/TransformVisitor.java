@@ -4,6 +4,7 @@ import com.antlr.grammarsv4.mysql.MySqlParser;
 import com.antlr.grammarsv4.mysql.MySqlParserBaseVisitor;
 import distribute.framework.ast.*;
 import distribute.framework.parser.Value;
+import distribute.framework.parser.datatype.Type;
 import distribute.framework.parser.datatype.ValueType;
 import distribute.framework.parser.expression.ColumnExpression;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -61,14 +62,14 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         MySqlParser.Query_specificationContext query_specificationContext = ctx.query_specification();
 
         MySqlParser.Select_listContext select_listContext = query_specificationContext.select_list();
-        AstNode map = new AstNode(node,"map");
+        AstNode map = new AstNode(node, "map");
         node.map = map;
         resetCurrent(map);
         visit(select_listContext);
 
         MySqlParser.From_clauseContext from_clauseContext = query_specificationContext.from_clause();
-        if(from_clauseContext.FROM()!=null){
-            AstNode source = new AstNode(node,"source");
+        if (from_clauseContext.FROM() != null) {
+            AstNode source = new AstNode(node, "source");
             node.source = source;
             resetCurrent(source);
             MySqlParser.Table_sourcesContext table_sourcesContext = from_clauseContext.table_sources();
@@ -76,7 +77,7 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         }
 
         if (from_clauseContext.WHERE() != null) {
-            AstNode filter = new AstNode(node,"filter");
+            AstNode filter = new AstNode(node, "filter");
             node.filter = filter;
             resetCurrent(filter);
             MySqlParser.ExpressionContext expression = from_clauseContext.expression(0);
@@ -362,7 +363,12 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     @Override
     public Object visitVariableSimpleExpr(MySqlParser.VariableSimpleExprContext ctx) {
-        //TODO
+        MySqlParser.Mysql_variableContext mysql_variableContext = ctx.mysql_variable();
+        MySqlParser.Mybatis_varContext mybatis_varContext = mysql_variableContext.mybatis_var();
+        if (mybatis_varContext != null) {
+            String text = mybatis_varContext.id_().getText();
+            new AstNode(current, text);
+        }
         return super.visitVariableSimpleExpr(ctx);
     }
 
@@ -466,10 +472,10 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         switch (ctx.pn) {
             case 1://string_literal
                 text = text.replaceAll("'", "");
-                ctx.value = new Value(ValueType.STRING, text);
+                ctx.value = new Value(Type.VARCHAR, text);
                 break;
             case 2://decimal_literal
-                ctx.value = new Value(ValueType.NUMBER, Integer.parseInt(text));
+                ctx.value = new Value(Type.BIGINT, Integer.parseInt(text));
                 break;
             case 3://hexadecimal_literal
                 text = text.replaceAll("0x", "");
@@ -477,22 +483,22 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
                 break;
             case 4://boolean_literal
                 if (text.equals("TRUE")) {
-                    ctx.value = new Value(ValueType.BOOLEAN, true);
+                    ctx.value = new Value(Type.TINYINT, true);
                 } else {
-                    ctx.value = new Value(ValueType.BOOLEAN, false);
+                    ctx.value = new Value(Type.TINYINT, false);
                 }
                 break;
             case 5://REAL_LITERAL
-                ctx.value = new Value(ValueType.NUMBER, Double.parseDouble(text));
+                ctx.value = new Value(Type.DOUBLE, Double.parseDouble(text));
                 break;
             case 6://BIT_STRING
                 //todo
                 break;
             case 7://NOTNULL
-                ctx.value = new Value(ValueType.NOTNULL);
+                ctx.value = Value.NOT_NULL;
                 break;
             case 8://(NULL_LITERAL | NULL_SPEC_LITERAL)
-                ctx.value = new Value(ValueType.NULL);
+                ctx.value = Value.NULL;
                 break;
         }
         return ctx;

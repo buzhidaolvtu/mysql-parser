@@ -22,6 +22,7 @@ public class PaserQuery extends ParserDML {
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
             MySqlLexer lexer = new MySqlLexer(charStream);
+            lexer.support_mybatis = false;
             TokenStream tokenStream = new CommonTokenStream(lexer);
             MySqlParser parser = new MySqlParser(tokenStream);
             ParseTree tree = parser.select_statement();

@@ -1,5 +1,6 @@
 package distribute.framework.ast;
 
+import distribute.framework.parser.Value;
 import org.antlr.v4.runtime.tree.Tree;
 
 import java.util.ArrayList;
@@ -70,6 +71,10 @@ public class AstNode implements Tree {
     @Override
     public int getChildCount() {
         return children.size();
+    }
+
+    public Value evaluate() {
+        return null;
     }
 
     @Override

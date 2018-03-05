@@ -1,6 +1,6 @@
 package distribute.framework.parser.table;
 
-import distribute.framework.parser.datatype.DataType;
+import distribute.framework.parser.datatype.Type;
 
 /**
 column_definition:
@@ -28,7 +28,7 @@ public class ColumnDefinition {
         DISK,MEMORY,DEFAULT
     }
 
-    private DataType dataType;
+    private Type dataType;
     private boolean isNullable;
     private boolean isNotNullable;
     private Object defaultValue;

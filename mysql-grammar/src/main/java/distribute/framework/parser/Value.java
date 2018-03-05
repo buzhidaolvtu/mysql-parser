@@ -1,17 +1,24 @@
 package distribute.framework.parser;
 
-import distribute.framework.parser.datatype.ValueType;
+import distribute.framework.parser.datatype.Type;
 
+/**
+ * Variable or the result of expression
+ */
 public class Value {
 
-    private ValueType type;
+    public final static Value NOT_NULL = new Value(null);
+    public final static Value NULL = new Value(null);
+
+    private Type type;
     private Object value;
 
-    public Value(ValueType type){
+
+    public Value(Type type){
         this(type,null);
     }
 
-    public Value(ValueType type, Object value) {
+    public Value(Type type, Object value) {
         this.type = type;
         this.value = value;
     }
