@@ -2068,11 +2068,11 @@ function_arg
 
 //MYSQL EXPRESSION START
 expression locals [Value value]:
-    e1=expression OR e2=expression            #OrExpression
-  | e1=expression '|' '|' e2=expression       #OrExpression
-  | e1=expression XOR e2=expression           #XorExpression
-  | e1=expression AND e2=expression           #AndExpression
+    e1=expression AND e2=expression           #AndExpression
   | e1=expression '&' '&' e2=expression       #AndExpression
+  | e1=expression XOR e2=expression           #XorExpression
+  | e1=expression OR e2=expression            #OrExpression
+  | e1=expression '|' '|' e2=expression       #OrExpression
   | NOT e1=expression                         #NotExpression
   | '!' e1=expression                         #NotExpression
   | e1=boolean_primary IS NOT? (TRUE | FALSE | UNKNOWN)   #IsExpression

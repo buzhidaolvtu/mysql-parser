@@ -14,7 +14,7 @@ public class ParserExpression {
 
     public static void main(String[] args) {
         try {
-            String file = "parser/examples/expression.sql";
+            String file = "parser/examples/expression2.sql";
             AntlrCaseInsensitiveFileStream antlrCaseInsensitiveFileStream = new AntlrCaseInsensitiveFileStream(file, "UTF-8", CaseInsensitiveType.UPPER);
             CharStream charStream = CharStreams.fromFileName(file);
             charStream = antlrCaseInsensitiveFileStream;
