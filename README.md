@@ -47,3 +47,4 @@ to be continued...
 [运算符优先级与结合顺序](https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687077/Operator+precedence+parser)
 * 不同结合顺序一定有不同的优先级
 * 相同优先级一定有相同的结合顺序（其实是上面命题的等价表示）
+[LLparser运算符的优先级与结合顺序的实现](https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#bib)
