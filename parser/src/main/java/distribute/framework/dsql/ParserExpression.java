@@ -4,7 +4,6 @@ import com.antlr.grammarsv4.mysql.MySqlLexer;
 import com.antlr.grammarsv4.mysql.MySqlParser;
 import distribute.framework.ast.AstNode;
 import org.antlr.v4.gui.TreeViewer;
-import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
