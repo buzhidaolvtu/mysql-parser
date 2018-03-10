@@ -2068,11 +2068,9 @@ function_arg
 
 //MYSQL EXPRESSION START
 expression locals [Value value]:
-    e1=expression AND e2=expression           #AndExpression
-  | e1=expression '&' '&' e2=expression       #AndExpression
+    e1=expression (AND|'&' '&') e2=expression           #AndExpression
   | e1=expression XOR e2=expression           #XorExpression
-  | e1=expression OR e2=expression            #OrExpression
-  | e1=expression '|' '|' e2=expression       #OrExpression
+  | e1=expression (OR|'|' '|') e2=expression            #OrExpression
   | NOT e1=expression                         #NotExpression
   | '!' e1=expression                         #NotExpression
   | e1=boolean_primary IS {System.out.println("IS");} NOT? (TRUE | FALSE | UNKNOWN)   #IsExpression
@@ -2100,15 +2098,9 @@ predicate locals [Value value]:
   ;
 
 bit_expr locals [Value value]:
-    e1=bit_expr '*' e2=bit_expr                                    #multiplyBitExpr
-  | e1=bit_expr '/' e2=bit_expr                                    #divideBitExpr
-  | e1=bit_expr '%' e2=bit_expr                                    #modBitExpr
-  | e1=bit_expr DIV e2=bit_expr                                    #divideBitExpr
-  | e1=bit_expr MOD e2=bit_expr                                    #modBitExpr
-  | e1=bit_expr '+' e2=bit_expr                                    #plusBitExpr
-  | e1=bit_expr '-' e2=bit_expr                                    #minusBitExpr
-  | e1=bit_expr '<' '<' e2=bit_expr                                #shiftLeftBitExpr
-  | e1=bit_expr '>' '>' e2=bit_expr                                #shiftRightBitExpr
+    e1=bit_expr ('*'|'/'|'%'|DIV|MOD) e2=bit_expr                  #Math1BitExpr
+  | e1=bit_expr ('+'|'-') e2=bit_expr                                    #Math2BitExpr
+  | e1=bit_expr ('<' '<'|'>' '>') e2=bit_expr                                #shiftBitExpr
   | e1=bit_expr '&' e2=bit_expr                                    #andBitExpr
   | e1=bit_expr '|' e2=bit_expr                                    #orBitExpr
   | e1=bit_expr '^' e2=bit_expr                                    #xorBitExpr

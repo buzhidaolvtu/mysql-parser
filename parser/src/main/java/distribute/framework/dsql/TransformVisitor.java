@@ -240,31 +240,26 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
     //BitExpr
 
-    @Override
-    public Object visitOrBitExpr(MySqlParser.OrBitExprContext ctx) {
-        AstNode node = new AstNodeBitOr(current);
-        resetCurrent(node);
-        Object o = super.visitOrBitExpr(ctx);
-
-        return o;
-    }
 
     @Override
-    public Object visitModBitExpr(MySqlParser.ModBitExprContext ctx) {
+    public Object visitMath1BitExpr(MySqlParser.Math1BitExprContext ctx) {
         AstNode node = new AstNodeMath(current);
         resetCurrent(node);
-        Object o = super.visitModBitExpr(ctx);
-
-        return o;
+        return super.visitMath1BitExpr(ctx);
     }
 
     @Override
-    public Object visitShiftLeftBitExpr(MySqlParser.ShiftLeftBitExprContext ctx) {
+    public Object visitMath2BitExpr(MySqlParser.Math2BitExprContext ctx) {
+        AstNode node = new AstNodeMath(current);
+        resetCurrent(node);
+        return super.visitMath2BitExpr(ctx);
+    }
+
+    @Override
+    public Object visitShiftBitExpr(MySqlParser.ShiftBitExprContext ctx) {
         AstNode node = new AstNodeShift(current);
         resetCurrent(node);
-        Object o = super.visitShiftLeftBitExpr(ctx);
-
-        return o;
+        return super.visitShiftBitExpr(ctx);
     }
 
     @Override
@@ -277,59 +272,10 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
         return o;
     }
 
-    @Override
-    public Object visitShiftRightBitExpr(MySqlParser.ShiftRightBitExprContext ctx) {
-
-        AstNode node = new AstNodeShift(current);
-        resetCurrent(node);
-        Object o = super.visitShiftRightBitExpr(ctx);
-
-        return o;
-    }
-
-    @Override
-    public Object visitMultiplyBitExpr(MySqlParser.MultiplyBitExprContext ctx) {
-
-        AstNode node = new AstNodeMath(current);
-        resetCurrent(node);
-        Object o = super.visitMultiplyBitExpr(ctx);
-
-        return o;
-    }
-
-    @Override
-    public Object visitDivideBitExpr(MySqlParser.DivideBitExprContext ctx) {
-
-        AstNode node = new AstNodeMath(current);
-        resetCurrent(node);
-        Object o = super.visitDivideBitExpr(ctx);
-
-        return o;
-    }
 
     @Override
     public Object visitSimpleBitExpr(MySqlParser.SimpleBitExprContext ctx) {
         return super.visitSimpleBitExpr(ctx);
-    }
-
-    @Override
-    public Object visitPlusBitExpr(MySqlParser.PlusBitExprContext ctx) {
-
-        AstNode node = new AstNodeMath(current);
-        resetCurrent(node);
-        Object o = super.visitPlusBitExpr(ctx);
-
-        return o;
-    }
-
-    @Override
-    public Object visitMinusBitExpr(MySqlParser.MinusBitExprContext ctx) {
-
-        AstNode node = new AstNodeMath(current);
-        resetCurrent(node);
-        Object o = super.visitMinusBitExpr(ctx);
-
-        return o;
     }
 
     @Override
@@ -343,6 +289,17 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
     }
 
     @Override
+    public Object visitOrBitExpr(MySqlParser.OrBitExprContext ctx) {
+        AstNode node = new AstNodeBitOr(current);
+        resetCurrent(node);
+        Object o = super.visitOrBitExpr(ctx);
+
+        return o;
+    }
+
+
+    //SimpleExpr
+    @Override
     public Object visitBitInvertSimpleExpr(MySqlParser.BitInvertSimpleExprContext ctx) {
 
         AstNode node = new AstNodeBitInversion(current);
@@ -351,8 +308,6 @@ public class TransformVisitor extends MySqlParserBaseVisitor {
 
         return o;
     }
-
-    //SimpleExpr
 
     @Override
     public Object visitDefaultSimpleExpr(MySqlParser.DefaultSimpleExprContext ctx) {
