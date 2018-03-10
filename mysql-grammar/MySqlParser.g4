@@ -2075,13 +2075,12 @@ expression locals [Value value]:
   | e1=expression '|' '|' e2=expression       #OrExpression
   | NOT e1=expression                         #NotExpression
   | '!' e1=expression                         #NotExpression
-  | e1=boolean_primary IS NOT? (TRUE | FALSE | UNKNOWN)   #IsExpression
+  | e1=boolean_primary IS {System.out.println("IS");} NOT? (TRUE | FALSE | UNKNOWN)   #IsExpression
   | e1=boolean_primary                           #SimpleExpression
   ;
 
 boolean_primary locals [Value value]:
     e1=boolean_primary IS null_notnull                            #IsNullBooleanPrimary
-//      boolean_primary IS NOT? NULL_LITERAL //TODO 为什么这个规则不好使
   | e1=boolean_primary '<' '=' '>' e2=predicate                         #ConsistentEqualBooleanPrimary
   | e1=boolean_primary comparison_operator e2=predicate                 #ComparisonBooleanPrimary
   | e1=boolean_primary comparison_operator (ALL | ANY) '(' e2=subquery ')' #ComparisonBooleanPrimary2
@@ -2101,17 +2100,17 @@ predicate locals [Value value]:
   ;
 
 bit_expr locals [Value value]:
-    e1=bit_expr '|' e2=bit_expr                                    #orBitExpr
-  | e1=bit_expr '&' e2=bit_expr                                    #andBitExpr
-  | e1=bit_expr '<' '<' e2=bit_expr                                #shiftLeftBitExpr
-  | e1=bit_expr '>' '>' e2=bit_expr                                #shiftRightBitExpr
-  | e1=bit_expr '+' e2=bit_expr                                    #plusBitExpr
-  | e1=bit_expr '-' e2=bit_expr                                    #minusBitExpr
-  | e1=bit_expr '*' e2=bit_expr                                    #multiplyBitExpr
+    e1=bit_expr '*' e2=bit_expr                                    #multiplyBitExpr
   | e1=bit_expr '/' e2=bit_expr                                    #divideBitExpr
   | e1=bit_expr '%' e2=bit_expr                                    #modBitExpr
   | e1=bit_expr DIV e2=bit_expr                                    #divideBitExpr
   | e1=bit_expr MOD e2=bit_expr                                    #modBitExpr
+  | e1=bit_expr '+' e2=bit_expr                                    #plusBitExpr
+  | e1=bit_expr '-' e2=bit_expr                                    #minusBitExpr
+  | e1=bit_expr '<' '<' e2=bit_expr                                #shiftLeftBitExpr
+  | e1=bit_expr '>' '>' e2=bit_expr                                #shiftRightBitExpr
+  | e1=bit_expr '&' e2=bit_expr                                    #andBitExpr
+  | e1=bit_expr '|' e2=bit_expr                                    #orBitExpr
   | e1=bit_expr '^' e2=bit_expr                                    #xorBitExpr
 //  | bit_expr '+' interval_expr
 //  | bit_expr '-' interval_expr
@@ -2127,10 +2126,10 @@ simple_expr locals [Value value]:
 //  | param_marker
   | mysql_variable                          #variableSimpleExpr
   | e1=simple_expr '|' '|' e2=simple_expr   #concatSimpleExpr
-  | '+' e1=simple_expr  #positiveSimpleExpr
-  | '-' e1=simple_expr  #negtiveSimpleExpr
-  | '~' e1=simple_expr #bitInvertSimpleExpr
   | '!' e1=simple_expr #hignNotSimpleExpr
+  | '+' e1=simple_expr #positiveSimpleExpr
+  | '-' e1=simple_expr #negtiveSimpleExpr
+  | '~' e1=simple_expr #bitInvertSimpleExpr
   | BINARY e1=simple_expr #binarySimpleExpr
   | '(' e=expression_list ')' #exprListSimpleExpr
   | ROW '(' e1=expression ',' e=expression_list ')' #rowSimpleExpr
